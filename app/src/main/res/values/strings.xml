@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Monitora_Saude_60</string>
+    <string name="btn_txt_medicamentos">Medicamentos</string>
+    <string name="btn_txt_atividades">Atividades</string>
+    <string name="label_medicamentos">Medicamentos</string>
+    <string name="label_horarios">Hora</string>
+    <string name="msg_campos_invalidos">Valores inválidos</string>
+    <string name="label_datainicial">Data inicial</string>
+    <string name="label_datafinal">Data final</string>
+    <string name="intervalo_entre_as_doses_em_horas">Intervalo entre as doses (em horas)</string>
+</resources>
