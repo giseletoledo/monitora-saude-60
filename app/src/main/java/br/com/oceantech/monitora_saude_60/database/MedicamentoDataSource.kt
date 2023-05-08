@@ -1,12 +1,12 @@
 package br.com.oceantech.monitora_saude_60.database
 
-import android.app.Application
 import br.com.oceantech.monitora_saude_60.dao.MedicamentoDao
 import br.com.oceantech.monitora_saude_60.model.Medicamento
+import br.com.oceantech.monitora_saude_60.repository.MedicamentoRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class MedicamentoDataSource(application: Application, medicamentoDao: MedicamentoDao) {
+class MedicamentoDataSource(medicamentoDao: MedicamentoDao) {
 
     private val dao = medicamentoDao
 

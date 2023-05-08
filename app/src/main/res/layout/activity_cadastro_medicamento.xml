@@ -22,18 +22,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="32dp"
+        app:layout_constraintGuide_begin="20dp"
         />
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guide_end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_end="32dp"
+        app:layout_constraintGuide_end="20dp"
         />
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/nomeMedicamentoLayout"
-        android:layout_width="match_parent"
+        android:layout_marginTop="16dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Nome do medicamento"
         app:layout_constraintStart_toStartOf="@+id/guide_start"
@@ -42,6 +43,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/nomeMedicamento"
+            android:layout_marginBottom="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
@@ -49,7 +51,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/dosagemLayout"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Dosagem"
         app:layout_constraintStart_toStartOf="@id/guide_start"
@@ -60,13 +62,14 @@
             android:id="@+id/dosagem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
             android:inputType="numberDecimal"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/intervaloDosesLayout"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/intervalo_entre_as_doses_em_horas"
         app:layout_constraintStart_toStartOf="@id/guide_start"
@@ -77,6 +80,7 @@
             android:id="@+id/intervaloDoses"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
             android:inputType="numberDecimal"/>
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -84,7 +88,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/txt_datainicial"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
@@ -96,6 +100,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
             android:focusable="false"
             android:inputType="none"/>
     </com.google.android.material.textfield.TextInputLayout>
@@ -103,47 +108,50 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/txt_datafinal"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:hint="@string/label_datafinal"
         app:startIconDrawable="@drawable/ic_calendar"
-        app:layout_constraintStart_toStartOf="@id/guide_start"
-        app:layout_constraintTop_toBottomOf="@id/txt_datainicial">
+        app:layout_constraintEnd_toEndOf="@id/guide_end"
+        app:layout_constraintTop_toBottomOf="@id/intervaloDosesLayout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
             android:focusable="false"
             android:inputType="none"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/txt_horarios"
+        android:id="@+id/txtHorarios"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/label_horarios"
+        app:layout_constraintTop_toBottomOf="@id/txt_datainicial"
+        app:layout_constraintEnd_toEndOf="@+id/guide_end"
         app:layout_constraintStart_toStartOf="@id/guide_start"
-        app:layout_constraintEnd_toEndOf="@id/guide_end"
-        app:layout_constraintTop_toBottomOf="@id/txt_datafinal">
-
+        app:startIconDrawable="@drawable/ic_timer"
+        >
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/txtHour"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="none" />
-
+            android:focusable="false"
+            android:inputType="none"/>
     </com.google.android.material.textfield.TextInputLayout>
 
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSalvarMedicamento"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Salvar"
+        app:layout_constraintStart_toStartOf="@id/guide_start"
+        app:layout_constraintEnd_toEndOf="@id/guide_end"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
