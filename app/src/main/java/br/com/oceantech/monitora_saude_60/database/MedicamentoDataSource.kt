@@ -2,7 +2,6 @@ package br.com.oceantech.monitora_saude_60.database
 
 import br.com.oceantech.monitora_saude_60.dao.MedicamentoDao
 import br.com.oceantech.monitora_saude_60.model.Medicamento
-import br.com.oceantech.monitora_saude_60.repository.MedicamentoRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -24,6 +23,10 @@ class MedicamentoDataSource(medicamentoDao: MedicamentoDao) {
 
     suspend fun delete(medicamento: Medicamento) = withContext(Dispatchers.IO) {
         dao.delete(medicamento)
+    }
+
+    suspend fun getAllMed(): List<Medicamento> {
+        return dao.getAll()
     }
 
 }

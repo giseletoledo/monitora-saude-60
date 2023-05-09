@@ -20,6 +20,10 @@ class MedicamentoRepository(private val dataSource: MedicamentoDataSource) {
         }
         dataSource.insert(medicamento)
     }
+
+    suspend fun getAllMed(): List<Medicamento> {
+        return dataSource.getAllMed()
+    }
 }
 
 

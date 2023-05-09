@@ -1,10 +1,13 @@
 package br.com.oceantech.monitora_saude_60
 
+import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import br.com.oceantech.monitora_saude_60.databinding.ActivityCadastroMedicamentoBinding
 import br.com.oceantech.monitora_saude_60.model.Medicamento
 import br.com.oceantech.monitora_saude_60.utils.formatDate
@@ -14,6 +17,7 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import kotlinx.coroutines.launch
 import java.time.DateTimeException
 import java.time.Instant
 import java.time.LocalDate
@@ -65,6 +69,7 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
             }
         }
 
+
         insertListeners()
 
         binding.btnSalvarMedicamento.setOnClickListener {
@@ -88,6 +93,14 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
                 dataFim = dataFinal,
                 horarios = horarios
             )
+            lifecycleScope.launch {
+                val medicamentos = viewModel.getMedicamentos()
+                val medicamentosString = medicamentos.joinToString(separator = "\n")
+                Log.d("Ver medicamentos cadastrados", medicamentosString)
+            }
+            //viewModel.insert(medicamento)
+            setResult(Activity.RESULT_OK)
+            finish()
         }
     }
     private fun insertListeners() {

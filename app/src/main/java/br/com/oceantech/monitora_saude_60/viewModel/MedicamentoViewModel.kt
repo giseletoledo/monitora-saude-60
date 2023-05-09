@@ -38,6 +38,12 @@ class MedicamentoViewModel(application: Application) : AndroidViewModel(applicat
         repository = MedicamentoRepository(MedicamentoDataSource(dao))
         loadMedicamentos()
     }
+
+    suspend fun getMedicamentos(): List<Medicamento> {
+        return withContext(Dispatchers.IO) {
+            repository.getAllMed()
+        }
+    }
     fun loadMedicamentos() {
         viewModelScope.launch {
             _medicamentos.value = withContext(Dispatchers.IO) { repository.getAll() }
