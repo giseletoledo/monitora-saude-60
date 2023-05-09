@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         binding.buttonMenuMedicamentos.setOnClickListener {
-            val intent = Intent(this, CadastroMedicamentoActivity::class.java)
+            val intent = Intent(this, ListaMedicamentoActivity::class.java)
             startActivity(intent)
         }
     }

@@ -46,7 +46,11 @@ class MedicamentoViewModel(application: Application) : AndroidViewModel(applicat
     }
     fun loadMedicamentos() {
         viewModelScope.launch {
-            _medicamentos.value = withContext(Dispatchers.IO) { repository.getAll() }
+            val medicamentosList = withContext(Dispatchers.IO) { repository.getAll() }
+            medicamentosList.forEach { medicamento ->
+                Log.d("Medicamento", "Item: $medicamento")
+            }
+            _medicamentos.value = medicamentosList
         }
     }
     fun insert(medicamento: Medicamento) {
