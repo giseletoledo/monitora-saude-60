@@ -1,30 +1,28 @@
 package br.com.oceantech.monitora_saude_60
 
-import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import br.com.oceantech.monitora_saude_60.databinding.ActivityCadastroMedicamentoBinding
 import br.com.oceantech.monitora_saude_60.model.Medicamento
 import br.com.oceantech.monitora_saude_60.utils.formatDate
-import br.com.oceantech.monitora_saude_60.utils.text
-import br.com.oceantech.monitora_saude_60.utils.toHorariosListOrNull
 import br.com.oceantech.monitora_saude_60.utils.toLocalDateOrNull
 import br.com.oceantech.monitora_saude_60.viewModel.MedicamentoViewModel
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import java.time.DateTimeException
 import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
+
 class CadastroMedicamentoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCadastroMedicamentoBinding
@@ -52,38 +50,44 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
             }
         }
 
+        viewModel.dataInicial.observe(this) { dataInicial ->
+            binding.txtDatainicial.editText?.setText(dataInicial?.formatDate())
+        }
+
+        viewModel.dataFinal.observe(this) { dataFinal ->
+            binding.txtDatafinal.editText?.setText(dataFinal?.formatDate())
+        }
+
+        viewModel.horarios.observe(this) { horarios ->
+            val firstHorario = horarios.firstOrNull()
+            if (firstHorario != null) {
+                binding.txtHorarios.editText?.setText(firstHorario.toString())
+            }
+        }
+
         insertListeners()
 
         binding.btnSalvarMedicamento.setOnClickListener {
-            val nome = binding.nomeMedicamento.text.toString().trim()
-            val dosagem = binding.dosagem.text.toString().toDoubleOrNull()
+            val nome = binding.nomeMedicamento.text.toString()
+            val dosagem = binding.dosagem.text.toString().toDoubleOrNull() ?: 0.0
             val intervaloDoses = binding.intervaloDoses.text.toString().toIntOrNull()
-            val dataInicio = binding.txtDatainicial.editText.toString().toLocalDateOrNull()
-            val dataFim = binding.txtDatafinal.editText.toString().toLocalDateOrNull()
-            val horarios = binding.txtHorarios.editText.toString().toHorariosListOrNull()
+            val dataInicial = viewModel.dataInicial.value
+            val dataFinal = viewModel.dataFinal.value
+            val horarios = viewModel.horarios.value ?: emptyList()
 
-           /* if (nome.isBlank() || dosagem == null || intervaloDoses == null || dataInicio == null || dataFim == null || horarios == null) {
-
-                Snackbar.make(binding.root, R.string.msg_campos_invalidos, Snackbar.LENGTH_LONG).show()
+            if (nome.isBlank()  || intervaloDoses == null || dataInicial == null || dataFinal == null || horarios.isEmpty()) {
+                Toast.makeText(this, "Preencha todos os campos obrigatórios", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
-            }*/
+            }
 
-            Log.d("Medicamento", "Inserindo no banco de dados: $nome $dosagem $intervaloDoses $dataInicio $dataFim $horarios") // adiciona um log com os valores do medicamento
-
-/*
             val medicamento = Medicamento(
-                medicamentoId.toInt(),
-                nome,
-                dosagem!!,
-                intervaloDoses!!,
-                dataInicio!!,
-                dataFim!!,
-                horarios!!
-            )*/
-
-            //viewModel.insert(medicamento)
-            //setResult(Activity.RESULT_OK)
-            //finish()
+                nome = nome,
+                dosagem = dosagem,
+                intervaloDoses = intervaloDoses,
+                dataInicio = dataInicial,
+                dataFim = dataFinal,
+                horarios = horarios
+            )
         }
     }
     private fun insertListeners() {
@@ -95,8 +99,9 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
                 try {
                     val dataInicial = Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDate()
                     viewModel.onDataInicialSelecionada(dataInicial)
-                    binding.txtDatainicial.text = dataInicial.formatDate()
+
                     validarDataInicial()
+                    binding.txtDatainicial.editText?.setText(dataInicial.formatDate())
                 } catch (e: DateTimeException) {
                     Toast.makeText(this, "Data inválida", Toast.LENGTH_LONG).show()
                 }
@@ -104,7 +109,6 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
 
             datePicker.show(supportFragmentManager, "DATE_PICKER_TAG")
         }
-
 
         binding.txtDatafinal.editText?.setOnClickListener {
 
@@ -116,9 +120,10 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
                     val dataInicial = validarDataInicial()
 
                     viewModel.onDataFinalSelecionada(dataFinal)
-                    binding.txtDatafinal.text = dataFinal.formatDate()
+
                     if (dataInicial != null) {
                         validarDataFinal(dataInicial)
+                        binding.txtDatafinal.editText?.setText(dataFinal.formatDate())
                     }
                 } catch (e: Exception) {
                     Toast.makeText(this, "Data inválida", Toast.LENGTH_LONG).show()
@@ -134,26 +139,32 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
                 .build()
 
             timePicker.addOnPositiveButtonClickListener {
-                val selectedTimeInMillis = timePicker.hour * 60L * 60L * 1000L + timePicker.minute * 60L * 1000L
+                //val selectedTimeInMillis = timePicker.hour * 60L * 60L * 1000L + timePicker.minute * 60L * 1000L
                 val intervaloDosesText = binding.intervaloDoses.text.toString()
                 if (intervaloDosesText.isBlank() || intervaloDosesText.toInt() <= 0) {
                     Toast.makeText(this, "Intervalo de doses inválido", Toast.LENGTH_LONG).show()
                 } else {
                     val intervaloDoses = intervaloDosesText.toInt()
-                    val startDate = binding.txtDatainicial.editText?.text?.toString()?.toLocalDateOrNull()?.atStartOfDay()?.toInstant(ZoneOffset.UTC)?.toEpochMilli()
 
-                    if (startDate == null) {
+                    val selectedTimeFormatted = "${timePicker.hour.toString().padStart(2, '0')}:${timePicker.minute.toString().padStart(2, '0')}"
+                    binding.txtHorarios.editText?.setText(selectedTimeFormatted) ?: run {
+                        Toast.makeText(this, "Preencha um horário", Toast.LENGTH_LONG).show()
+                    }
+
+                    val selectedTime = LocalTime.of(timePicker.hour, timePicker.minute)
+
+                    val startDate = binding.txtDatainicial.editText?.text?.toString()?.toLocalDateOrNull()?.atTime(selectedTime.getHour(), selectedTime.getMinute())?.toInstant(ZoneOffset.UTC)
+                    val finalDate = binding.txtDatafinal.editText?.text?.toString()?.toLocalDateOrNull()
+
+                    if (startDate == null || finalDate == null) {
                         Toast.makeText(this, "Preencha a Data inicial", Toast.LENGTH_LONG).show()
                     } else {
-                        val selectedTimeFormatted = "${timePicker.hour.toString().padStart(2, '0')}:${timePicker.minute.toString().padStart(2, '0')}"
+                        val horarios = calcularHorarios(intervaloDoses, startDate, selectedTimeFormatted, finalDate)
+                        val localTimes = horarios.map { LocalTime.parse(it) }
 
-                        binding.txtHorarios.editText?.setText(selectedTimeFormatted) ?: run {
-                            Toast.makeText(this, "Preencha um horário", Toast.LENGTH_LONG).show()
-                        }
-
-                        val horarios = calcularHorarios(intervaloDoses, startDate, selectedTimeInMillis)
-                        viewModel.onHorariosSelecionados(horarios as MutableList<String>)
+                        viewModel.onHorariosSelecionados(localTimes)
                     }
+
                 }
             }
 
@@ -161,18 +172,32 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
         }
     }
 
-    private fun calcularHorarios(intervaloDoses: Int, startDate: Long, selectedTimeInMillis: Long): List<String> {
+    private fun calcularHorarios(intervaloDoses: Int, startDate: Instant?, selectedTimeFormatted: String, dataFinal: LocalDate?): List<String> {
         val horarios = mutableListOf<String>()
-        var nextTimeInMillis = startDate + selectedTimeInMillis
-        val intervalInMillis = intervaloDoses * 60 * 60 * 1000
-        while (nextTimeInMillis < System.currentTimeMillis() + intervalInMillis) {
-            val nextTime = Instant.ofEpochMilli(nextTimeInMillis).atZone(ZoneOffset.UTC).toLocalDateTime()
-            val horario = "${nextTime.hour.toString().padStart(2, '0')}:${nextTime.minute.toString().padStart(2, '0')}"
-            horarios.add(horario)
-            nextTimeInMillis += intervalInMillis
+
+        // Converter a string selectedTimeFormatted para LocalTime
+        val selectedTime = LocalTime.parse(selectedTimeFormatted)
+
+        // Converter a data de início para LocalDateTime
+        val startDateTime = LocalDateTime.ofInstant(startDate, ZoneOffset.UTC)
+
+        // Calcular a próxima data/hora do medicamento
+        var nextDateTime = startDateTime.with(selectedTime)
+        if (nextDateTime.isBefore(startDateTime)) {
+            // Se a próxima data/hora do medicamento for antes da data de início, adicionar o intervalo
+            nextDateTime = nextDateTime.plusHours(intervaloDoses.toLong())
         }
+
+        // Adicionar os horários à lista enquanto a data/hora for menor ou igual à data final
+        while (dataFinal == null || nextDateTime.toLocalDate().isBefore(dataFinal.plusDays(1))) {
+            val nextTimeFormatted = DateTimeFormatter.ISO_LOCAL_TIME.format(nextDateTime.toLocalTime())
+            horarios.add(nextTimeFormatted)
+            nextDateTime = nextDateTime.plusHours(intervaloDoses.toLong())
+        }
+
         return horarios
     }
+
 
     private fun validarDataInicial(): LocalDate? {
         // Obtém a string contendo a data do campo de data inicial
@@ -187,7 +212,6 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
             Toast.makeText(this, "Preencha a data inicial", Toast.LENGTH_LONG).show()
             return null
         }
-
         return dataInicial
     }
 
@@ -239,3 +263,4 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
     }
 
 }
+
