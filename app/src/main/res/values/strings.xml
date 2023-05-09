@@ -10,4 +10,11 @@
     <string name="intervalo_entre_as_doses_em_horas">Intervalo entre as doses (em horas)</string>
     <string name="btnTextdelete">Deletar</string>
     <string name="btnTextEdit">Editar</string>
+    <string name="btn_text_adicionar_medicamento">Adicionar Medicamento</string>
+    <string name="medication_name">Nome do remédio:</string>
+    <string name="menu_home">Inicio</string>
+    <string name="menu_medicamentos">Medicamentos</string>
+    <string name="menu_relatorio">Relatorio</string>
+    <string name="menu_dieta">dieta</string>
+    <string name="menu_config">configurações</string>
 </resources>

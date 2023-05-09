@@ -3,14 +3,12 @@ package br.com.oceantech.monitora_saude_60
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.MenuItem
 import br.com.oceantech.monitora_saude_60.databinding.ActivityMainBinding
 import com.google.android.material.appbar.MaterialToolbar
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,22 +18,41 @@ class MainActivity : AppCompatActivity() {
         // Configura a Toolbar
         val toolbar: MaterialToolbar = binding.toolbar
         setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         binding.buttonMenuMedicamentos.setOnClickListener {
             val intent = Intent(this, ListaMedicamentoActivity::class.java)
             startActivity(intent)
         }
+
+        binding.bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.action_home -> {
+                    // Ação ao selecionar o menu Home
+                    true
+                }
+                R.id.action_medicamentos -> {
+                    // Direcionar para a ListaMedicamentoActivity
+                    val intent = Intent(this, ListaMedicamentoActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                R.id.action_dieta -> {
+                    // Ação ao selecionar o menu Dieta
+                    true
+                }
+                R.id.action_relatorio -> {
+                    // Ação ao selecionar o menu Relatório
+                    true
+                }
+                R.id.action_configuracoes -> {
+                    // Ação ao selecionar o menu Configurações
+                    true
+                }
+                else -> false
+            }
+        }
+
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> {
-                // Tratar evento de clique no botão de voltar
-                onBackPressed()
-                return true
-            }
-            else -> return super.onOptionsItemSelected(item)
-        }
-    }
+
 }

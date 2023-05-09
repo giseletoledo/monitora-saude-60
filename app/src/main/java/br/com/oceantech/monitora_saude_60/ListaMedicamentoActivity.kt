@@ -1,13 +1,16 @@
 package br.com.oceantech.monitora_saude_60
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.oceantech.monitora_saude_60.databinding.ActivityListaMedicamentoBinding
 import br.com.oceantech.monitora_saude_60.model.Medicamento
 import br.com.oceantech.monitora_saude_60.viewModel.MedicamentoListAdapter
 import br.com.oceantech.monitora_saude_60.viewModel.MedicamentoViewModel
+import com.google.android.material.appbar.MaterialToolbar
 
 class ListaMedicamentoActivity : AppCompatActivity() {
 
@@ -19,6 +22,16 @@ class ListaMedicamentoActivity : AppCompatActivity() {
             super.onCreate(savedInstanceState)
             binding = ActivityListaMedicamentoBinding.inflate(layoutInflater)
             setContentView(binding.root)
+
+            // Configura a Toolbar
+            val toolbar: MaterialToolbar = binding.toolbar
+            setSupportActionBar(toolbar)
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+            binding.btnAdicionarMedicamento.setOnClickListener {
+                val intent = Intent(this, CadastroMedicamentoActivity::class.java)
+                startActivity(intent)
+            }
 
             // Inicialize a RecyclerView e o Adapter
             adapter = MedicamentoListAdapter(this, onDelete = { medicamento -> deleteMedicamento(medicamento) }, onEdit = { medicamento ->
@@ -45,13 +58,56 @@ class ListaMedicamentoActivity : AppCompatActivity() {
 
             // Carregue a lista de medicamentos do banco de dados
             viewModel.loadMedicamentos()
+
+            binding.bottomNavigationView.setOnItemSelectedListener { item ->
+                when (item.itemId) {
+                    R.id.action_home -> {
+                        // Ação ao selecionar o menu Home
+                        val intent = Intent(this, MainActivity::class.java)
+                        startActivity(intent)
+                        true
+                    }
+                    R.id.action_medicamentos -> {
+                        // Direcionar para a ListaMedicamentoActivity
+                        val intent = Intent(this, ListaMedicamentoActivity::class.java)
+                        startActivity(intent)
+                        true
+                    }
+                    R.id.action_dieta -> {
+                        // Ação ao selecionar o menu Dieta
+                        true
+                    }
+                    R.id.action_relatorio -> {
+                        // Ação ao selecionar o menu Relatório
+                        true
+                    }
+                    R.id.action_configuracoes -> {
+                        // Ação ao selecionar o menu Configurações
+                        true
+                    }
+                    else -> false
+                }
+            }
         }
 
-        private fun deleteMedicamento(medicamento: Medicamento) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                // Tratar evento de clique no botão de voltar
+                onBackPressedDispatcher.onBackPressed()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun deleteMedicamento(medicamento: Medicamento) {
             viewModel.delete(medicamento)
         }
 
         private fun editMedicamento(medicamento: Medicamento) {
             // Implemente a lógica de edição de medicamento aqui
         }
+
+
 }

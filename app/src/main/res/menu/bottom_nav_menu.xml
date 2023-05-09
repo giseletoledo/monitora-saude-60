@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_home"
+        android:icon="@drawable/ic_home"
+        android:title="@string/menu_home"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_medicamentos"
+        android:icon="@drawable/ic_medicamentos"
+        android:title="@string/menu_medicamentos"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_dieta"
+        android:icon="@drawable/ic_dieta"
+        android:title="@string/menu_dieta"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_relatorio"
+        android:icon="@drawable/ic_relatorio"
+        android:title="@string/menu_relatorio"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_configuracoes"
+        android:icon="@drawable/ic_config"
+        android:title="@string/menu_config"
+        app:showAsAction="ifRoom" />
+
+
+</menu>

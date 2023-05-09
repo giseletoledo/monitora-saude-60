@@ -6,6 +6,34 @@
     android:layout_height="match_parent"
     tools:context=".ListaMedicamentoActivity">
 
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:toolbarStyle="@style/ToolbarStyle"
+        app:titleTextColor="@color/white"
+        app:navigationIcon="@drawable/ic_baseline_navigate_before_24"
+        app:title="@string/label_medicamentos"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/btnAdicionarMedicamento"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/rounded_button"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="@string/btn_text_adicionar_medicamento"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.88"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewMedicamento"
         android:layout_width="0dp"
@@ -16,7 +44,17 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/btnAdicionarMedicamento" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_nav_menu" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

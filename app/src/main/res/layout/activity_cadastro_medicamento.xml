@@ -15,8 +15,8 @@
         app:titleTextColor="@color/white"
         app:navigationIcon="@drawable/ic_baseline_navigate_before_24"
         app:title="@string/label_medicamentos"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guide_start"
         android:layout_width="wrap_content"
@@ -153,5 +153,15 @@
         app:layout_constraintStart_toStartOf="@id/guide_start"
         app:layout_constraintEnd_toEndOf="@id/guide_end"
         app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_nav_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

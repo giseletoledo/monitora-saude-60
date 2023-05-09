@@ -1,6 +1,7 @@
 package br.com.oceantech.monitora_saude_60
 
 import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -101,6 +102,36 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
             //viewModel.insert(medicamento)
             setResult(Activity.RESULT_OK)
             finish()
+        }
+
+        binding.bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.action_home -> {
+                    // Ação ao selecionar o menu Home
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                R.id.action_medicamentos -> {
+                    // Direcionar para a ListaMedicamentoActivity
+                    val intent = Intent(this, ListaMedicamentoActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                R.id.action_dieta -> {
+                    // Ação ao selecionar o menu Dieta
+                    true
+                }
+                R.id.action_relatorio -> {
+                    // Ação ao selecionar o menu Relatório
+                    true
+                }
+                R.id.action_configuracoes -> {
+                    // Ação ao selecionar o menu Configurações
+                    true
+                }
+                else -> false
+            }
         }
     }
     private fun insertListeners() {
@@ -210,8 +241,6 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
 
         return horarios
     }
-
-
     private fun validarDataInicial(): LocalDate? {
         // Obtém a string contendo a data do campo de data inicial
         val dataInicialStr = binding.txtDatainicial.editText?.text?.toString()
@@ -255,7 +284,7 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
         when (item.itemId) {
             android.R.id.home -> {
                 // Tratar evento de clique no botão de voltar
-                onBackPressed()
+                onBackPressedDispatcher.onBackPressed()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
