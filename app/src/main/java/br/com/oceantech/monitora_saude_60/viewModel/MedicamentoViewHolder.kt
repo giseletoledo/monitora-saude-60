@@ -1,9 +1,7 @@
 package br.com.oceantech.monitora_saude_60.viewModel
 
-import android.provider.Settings.Secure.getString
-import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
-import br.com.oceantech.monitora_saude_60.R
 import br.com.oceantech.monitora_saude_60.databinding.ItemMedicamentoBinding
 import br.com.oceantech.monitora_saude_60.model.Medicamento
 
@@ -16,7 +14,17 @@ class MedicamentoViewHolder(private val binding: ItemMedicamentoBinding) : Recyc
         binding.tvHorariosMedicamento.text = "Horários: ${medicamento.horarios.joinToString(", ")}"
 
         binding.btnDeletar.setOnClickListener {
-            onDelete(medicamento)
+            val builder = AlertDialog.Builder(binding.root.context)
+            builder.setMessage("Tem certeza que deseja excluir este medicamento?")
+                .setCancelable(false)
+                .setPositiveButton("Sim") { _, _ ->
+                    onDelete(medicamento)
+                }
+                .setNegativeButton("Não") { dialog, _ ->
+                    dialog.dismiss()
+                }
+            val alert = builder.create()
+            alert.show()
         }
 
         binding.btnEditar.setOnClickListener {

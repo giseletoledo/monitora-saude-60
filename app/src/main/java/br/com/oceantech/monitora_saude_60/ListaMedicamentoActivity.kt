@@ -108,6 +108,4 @@ class ListaMedicamentoActivity : AppCompatActivity() {
         private fun editMedicamento(medicamento: Medicamento) {
             // Implemente a lógica de edição de medicamento aqui
         }
-
-
 }
