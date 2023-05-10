@@ -17,7 +17,6 @@
         app:title="@string/label_medicamentos"
         app:layout_constraintTop_toTopOf="parent" />
 
-
     <TextView
         android:id="@+id/btnAdicionarMedicamento"
         android:layout_width="wrap_content"

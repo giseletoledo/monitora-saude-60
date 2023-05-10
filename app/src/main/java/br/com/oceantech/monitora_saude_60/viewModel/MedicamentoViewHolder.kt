@@ -11,6 +11,7 @@ class MedicamentoViewHolder(private val binding: ItemMedicamentoBinding) : Recyc
         binding.tvNomeMedicamento.text = "Nome do remédio: ${medicamento.nome}"
         binding.tvDosagemMedicamento.text = "Dosagem: ${medicamento.dosagem}"
         binding.tvIntervaloMedicamento.text = "Intervalo entre doses: ${medicamento.intervaloDoses}"
+        binding.tvDuracao.text = "Duração em dias: ${medicamento.duracao}"
         binding.tvHorariosMedicamento.text = "Horários: ${medicamento.horarios.joinToString(", ")}"
 
         binding.btnDeletar.setOnClickListener {

@@ -9,15 +9,11 @@ import br.com.oceantech.monitora_saude_60.dao.MedicamentoDao
 import br.com.oceantech.monitora_saude_60.database.converters.DateConverter
 import br.com.oceantech.monitora_saude_60.database.converters.TimeListConverter
 import br.com.oceantech.monitora_saude_60.model.Medicamento
-import br.com.oceantech.monitora_saude_60.repository.MedicamentoRepository
 
-
-@Database(entities = [Medicamento::class], version = 1, exportSchema = false)
+@Database(entities = [Medicamento::class], version = 2, exportSchema = false)
     @TypeConverters(DateConverter::class, TimeListConverter::class)
     abstract class AppDatabase : RoomDatabase() {
-
         abstract fun medicamentoDao(): MedicamentoDao
-
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null
@@ -28,11 +24,11 @@ import br.com.oceantech.monitora_saude_60.repository.MedicamentoRepository
                     context.applicationContext,
                     AppDatabase::class.java,
                     "medicamento_db"
-                ).build()
+                ).addMigrations(Migration1To2())
+                    .build()
                 INSTANCE = instance
                 instance
             }
         }
     }
-
 }

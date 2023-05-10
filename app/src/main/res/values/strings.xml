@@ -17,4 +17,6 @@
     <string name="menu_relatorio">Relatorio</string>
     <string name="menu_dieta">dieta</string>
     <string name="menu_config">configurações</string>
+    <string name="duracao">Duração</string>
+    <string name="btn_txt_dieta">Dieta</string>
 </resources>

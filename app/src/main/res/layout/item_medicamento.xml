@@ -35,6 +35,16 @@
         app:layout_constraintTop_toBottomOf="@id/tvDosagemMedicamento" />
 
     <TextView
+        android:id="@+id/tvDuracao"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Duração em dias"
+        android:textAppearance="?android:textAppearanceSmall"
+        app:layout_constraintEnd_toStartOf="@+id/btnDeletar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvIntervaloMedicamento" />
+
+    <TextView
         android:id="@+id/tvHorariosMedicamento"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,7 +52,7 @@
         android:textAppearance="?android:textAppearanceSmall"
         app:layout_constraintEnd_toStartOf="@+id/btnDeletar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvIntervaloMedicamento" />
+        app:layout_constraintTop_toBottomOf="@id/tvDuracao" />
 
     <ImageButton
         android:id="@+id/btnEditar"

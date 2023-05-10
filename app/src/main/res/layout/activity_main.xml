@@ -33,22 +33,6 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <Button
-            android:id="@+id/button_menu_atividades"
-            android:layout_width="0dp"
-            android:layout_height="150dp"
-            android:layout_weight="1"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:paddingTop="18dp"
-            android:drawableTop="@drawable/ic_atividades"
-            android:drawableTint="@color/white"
-            android:text="@string/btn_txt_atividades"
-            android:textSize="20sp"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:background="@drawable/rounded_button" />
-
-        <Button
             android:id="@+id/button_menu_medicamentos"
             android:layout_width="0dp"
             android:layout_height="150dp"
@@ -59,6 +43,22 @@
             android:drawableTop="@drawable/ic_medicamentos"
             android:drawableTint="@color/white"
             android:text="@string/btn_txt_medicamentos"
+            android:textSize="20sp"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:background="@drawable/rounded_button" />
+
+        <Button
+            android:id="@+id/button_menu_dieta"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:paddingTop="18dp"
+            android:drawableTop="@drawable/ic_dieta"
+            android:drawableTint="@color/white"
+            android:text="@string/btn_txt_dieta"
             android:textSize="20sp"
             android:textAlignment="center"
             android:textColor="@color/white"

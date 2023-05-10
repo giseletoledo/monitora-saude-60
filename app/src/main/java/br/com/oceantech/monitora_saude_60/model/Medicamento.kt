@@ -17,7 +17,7 @@ data class Medicamento(
     val dosagem: Double,
     val intervaloDoses: Int,
     val dataInicio: LocalDate,
-    val dataFim: LocalDate,
     val horarios: List<LocalTime>,
-    val tomou: Boolean = false // novo campo para indicar se o medicamento foi tomado
+    val tomou: Boolean = false, // novo campo para indicar se o medicamento foi tomado
+    val duracao: Int
 )
