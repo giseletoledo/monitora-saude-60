@@ -17,17 +17,19 @@
         app:title="@string/label_medicamentos"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/btnAdicionarMedicamento"
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAdicionarMedicamento"
         android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:background="@drawable/rounded_button"
-        android:gravity="center"
-        android:padding="8dp"
-        android:text="@string/btn_text_adicionar_medicamento"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        tools:layout_editor_absoluteY="72dp" />
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="64dp"
+        android:src="@drawable/ic_add"
+        app:backgroundTint="@color/md_theme_light_primaryContainer"
+        app:fabSize="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewMedicamento"
@@ -39,7 +41,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnAdicionarMedicamento" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"

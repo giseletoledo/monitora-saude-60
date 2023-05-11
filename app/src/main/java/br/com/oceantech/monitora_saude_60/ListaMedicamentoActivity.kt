@@ -28,7 +28,7 @@ class ListaMedicamentoActivity : AppCompatActivity() {
             setSupportActionBar(toolbar)
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-            binding.btnAdicionarMedicamento.setOnClickListener {
+            binding.fabAdicionarMedicamento.setOnClickListener {
                 val intent = Intent(this, CadastroMedicamentoActivity::class.java)
                 startActivity(intent)
             }
