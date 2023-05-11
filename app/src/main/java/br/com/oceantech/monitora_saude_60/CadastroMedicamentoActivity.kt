@@ -208,8 +208,6 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
             horarios.add(nextTimeFormatted)
             nextDateTime = nextDateTime.plusHours(intervaloDoses.toLong())
         }
-
-
         return horarios
     }
     private fun validarDataInicial(): LocalDate? {

@@ -1,5 +1,6 @@
 package br.com.oceantech.monitora_saude_60
 
+
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -15,10 +16,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Configura a Toolbar
-        val toolbar: MaterialToolbar = binding.toolbar
-        setSupportActionBar(toolbar)
-
         binding.buttonMenuMedicamentos.setOnClickListener {
             val intent = Intent(this, ListaMedicamentoActivity::class.java)
             startActivity(intent)
@@ -28,6 +25,7 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.action_home -> {
                     // Ação ao selecionar o menu Home
+
                     true
                 }
                 R.id.action_medicamentos -> {
@@ -42,10 +40,14 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.action_relatorio -> {
                     // Ação ao selecionar o menu Relatório
+                    val intent = Intent(this, LoginActivity::class.java)
+                    startActivity(intent)
                     true
                 }
                 R.id.action_configuracoes -> {
                     // Ação ao selecionar o menu Configurações
+                    val intent = Intent(this, RegisterActivity::class.java)
+                    startActivity(intent)
                     true
                 }
                 else -> false
@@ -53,6 +55,4 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-
-
 }

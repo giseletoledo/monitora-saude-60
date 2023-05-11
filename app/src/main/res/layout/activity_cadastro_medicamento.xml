@@ -12,6 +12,7 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         app:toolbarStyle="@style/ToolbarStyle"
+        app:titleCentered="true"
         app:titleTextColor="@color/white"
         app:navigationIcon="@drawable/ic_baseline_navigate_before_24"
         app:title="@string/label_medicamentos"
@@ -129,16 +130,21 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/label_horarios"
-        app:layout_constraintTop_toBottomOf="@id/txt_datainicial"
-        app:layout_constraintEnd_toEndOf="@+id/guide_end"
-        app:layout_constraintStart_toStartOf="@id/guide_start"
-        app:startIconDrawable="@drawable/ic_timer"
-        >
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        app:layout_constraintEnd_toStartOf="@+id/guide_end"
+        app:layout_constraintStart_toEndOf="@+id/txt_datainicial"
+        app:layout_constraintTop_toBottomOf="@+id/duracaoDias"
+        app:startIconDrawable="@drawable/ic_timer">
+
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+
             android:focusable="false"
-            android:inputType="none"/>
+            android:inputType="none" />
     </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -146,7 +152,10 @@
         android:id="@+id/btnSalvarMedicamento"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Salvar"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/rounded_button"
+        android:gravity="center"
+        android:text="@string/btn_adicionar_medicamento"
         app:layout_constraintStart_toStartOf="@id/guide_start"
         app:layout_constraintEnd_toEndOf="@id/guide_end"
         app:layout_constraintTop_toBottomOf="@id/txtHorarios"

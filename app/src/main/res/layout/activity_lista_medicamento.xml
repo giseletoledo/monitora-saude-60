@@ -21,17 +21,13 @@
         android:id="@+id/btnAdicionarMedicamento"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
-        android:layout_marginTop="8dp"
         android:background="@drawable/rounded_button"
         android:gravity="center"
         android:padding="8dp"
         android:text="@string/btn_text_adicionar_medicamento"
         android:textColor="@color/white"
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.88"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+        tools:layout_editor_absoluteY="72dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewMedicamento"
