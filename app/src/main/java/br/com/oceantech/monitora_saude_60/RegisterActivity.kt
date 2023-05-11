@@ -3,13 +3,14 @@ package br.com.oceantech.monitora_saude_60
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.Button
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import br.com.oceantech.monitora_saude_60.databinding.ActivityRegisterBinding
 import br.com.oceantech.monitora_saude_60.model.User
 import br.com.oceantech.monitora_saude_60.viewModel.UserViewModel
 import com.google.android.material.appbar.MaterialToolbar
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -38,7 +39,7 @@ class RegisterActivity : AppCompatActivity() {
             val phone = binding.telInputEditText.text.toString().trim()
 
             // Verifica se todos os campos foram preenchidos
-            if (name.isEmpty() || birthday.isEmpty() || password.isEmpty() || phone.isEmpty() || sex.isEmpty()) {
+            if (name.isEmpty() || birthday.isEmpty() || password.isEmpty() || phone.isEmpty()) {
                 Toast.makeText(this, "Por favor, preencha todos os campos.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -49,10 +50,14 @@ class RegisterActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+         val dateString = "2023-05-11"
+         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+         val birthdayData = LocalDate.parse(dateString, formatter)
+
             // Cria um objeto User a partir dos campos preenchidos
             val user = User(
                 name = name,
-                birthday = birthday,
+                birthday = birthdayData,
                 login = login,
                 password = password,
                 phone = phone
