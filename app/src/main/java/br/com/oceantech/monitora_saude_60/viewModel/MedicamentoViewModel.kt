@@ -79,9 +79,6 @@ class MedicamentoViewModel(application: Application) : AndroidViewModel(applicat
     fun onDataInicialSelecionada(data: LocalDate?) {
         _dataInicial.value = data
     }
-    fun onDataFinalSelecionada(data: LocalDate?) {
-        _dataFinal.value = data
-    }
     fun onHorariosSelecionados(horarios: List<LocalTime>) {
         _horarios.value = horarios
     }
