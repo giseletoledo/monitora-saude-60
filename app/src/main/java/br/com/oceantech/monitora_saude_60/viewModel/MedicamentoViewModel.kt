@@ -29,10 +29,10 @@ class MedicamentoViewModel(application: Application) : AndroidViewModel(applicat
     private var _dataInicial = MutableLiveData<LocalDate>()
     val dataInicial: LiveData<LocalDate> = _dataInicial
 
-    private var _dataFinal = MutableLiveData<LocalDate>()
-    val dataFinal: LiveData<LocalDate> = _dataFinal
-
-
+    val adapter: MedicamentoListAdapter = MedicamentoListAdapter(
+        onDelete = { medicamento -> delete(medicamento) },
+        onEdit = { medicamento -> edit(medicamento) }
+    )
     init {
         val dao = AppDatabase.getInstance(application).medicamentoDao()
         repository = MedicamentoRepository(MedicamentoDataSource(dao))
@@ -60,6 +60,7 @@ class MedicamentoViewModel(application: Application) : AndroidViewModel(applicat
             withContext(Dispatchers.IO) {
                 repository.insertOrUpdate(medicamento)
             }
+         adapter.updateList(medicamentos.value)
         }
     }
     fun delete(medicamento: Medicamento) {
@@ -68,6 +69,11 @@ class MedicamentoViewModel(application: Application) : AndroidViewModel(applicat
             loadMedicamentos()
         }
     }
+
+    fun edit(medicamento: Medicamento) {
+
+    }
+
     fun getById(id: Int): LiveData<Medicamento> {
         val liveData = MutableLiveData<Medicamento>()
         viewModelScope.launch {

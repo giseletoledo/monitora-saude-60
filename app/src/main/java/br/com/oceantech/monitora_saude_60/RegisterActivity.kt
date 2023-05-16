@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import br.com.oceantech.monitora_saude_60.databinding.ActivityRegisterBinding
 import br.com.oceantech.monitora_saude_60.model.User
 import br.com.oceantech.monitora_saude_60.utils.formatDate
@@ -15,6 +16,7 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
+import kotlinx.coroutines.launch
 import java.time.DateTimeException
 import java.time.Instant
 import java.time.LocalDate
@@ -68,14 +70,15 @@ class RegisterActivity : AppCompatActivity() {
             )
 
             // Insere o novo usuário no banco de dados
-            //userViewModel.insert(user)
-
-
-           Log.d("Usuário cadastrado", "user")
+         lifecycleScope.launch {
+             userViewModel.insert(user)
+             val usuarios = userViewModel.getAllUsers()
+             val usuariosString = usuarios.joinToString(separator = "\n")
+             Log.d("Ver usuários cadastrados", usuariosString)
+         }
 
          // Exibe o objeto User no Toast
          Toast.makeText(this, user.toString(), Toast.LENGTH_SHORT).show()
-
 
          // Exibe uma mensagem de sucesso
             Toast.makeText(this, "Usuário criado com sucesso.", Toast.LENGTH_SHORT).show()

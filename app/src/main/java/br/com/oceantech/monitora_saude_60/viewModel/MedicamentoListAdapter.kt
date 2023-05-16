@@ -3,12 +3,10 @@ package br.com.oceantech.monitora_saude_60.viewModel
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import br.com.oceantech.monitora_saude_60.ListaMedicamentoActivity
 import br.com.oceantech.monitora_saude_60.databinding.ItemMedicamentoBinding
 import br.com.oceantech.monitora_saude_60.model.Medicamento
 
 class MedicamentoListAdapter(
-    private val activity: ListaMedicamentoActivity,
     private val onDelete: (Medicamento) -> Unit,
     private val onEdit: (Medicamento) -> Unit
 ) : RecyclerView.Adapter<MedicamentoViewHolder>() {

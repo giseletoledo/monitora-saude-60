@@ -24,7 +24,7 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     suspend fun insert(user: User) = repository.insert(user)
-    fun getUserByLoginAndPassword(login: String, password: String): User? = repository.getUserByLoginAndPassword(login, password)
+    suspend fun getUserByLoginAndPassword(login: String, password: String): User? = repository.getUserByLoginAndPassword(login, password)
     suspend fun update(user: User) = repository.update(user)
     suspend fun delete(user: User) = repository.delete(user)
     suspend fun getUserById(id: Int): User? = repository.getUserById(id)

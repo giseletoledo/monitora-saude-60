@@ -14,7 +14,8 @@
         app:toolbarStyle="@style/ToolbarStyle"
         app:titleTextColor="@color/white"
         app:navigationIcon="@drawable/ic_baseline_navigate_before_24"
-        app:title="@string/label_medicamentos"
+        app:titleCentered="true"
+        app:title="@string/label_listamedicamentos"
         app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -29,7 +30,8 @@
         app:backgroundTint="@color/md_theme_light_primaryContainer"
         app:fabSize="normal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView" />
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        android:contentDescription="@string/adicionar_medicamento_descricao" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewMedicamento"
@@ -52,6 +54,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_nav_menu" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

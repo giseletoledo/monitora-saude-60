@@ -6,9 +6,11 @@ import android.view.MenuItem
 
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import br.com.oceantech.monitora_saude_60.databinding.ActivityLoginBinding
 import br.com.oceantech.monitora_saude_60.viewModel.UserViewModel
 import com.google.android.material.appbar.MaterialToolbar
+import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
@@ -33,28 +35,22 @@ class LoginActivity : AppCompatActivity() {
             val password = binding.senhaInputEditText.text.toString().trim()
 
             if (login.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show()
-            } else {
-                if (login == "admin" && password == "1234"){
-                    Toast.makeText(this, "Bem-vindo, ${login}", Toast.LENGTH_SHORT).show()
-                } else{
-                    Toast.makeText(this, "Usuário ou senha incorretos", Toast.LENGTH_SHORT).show()
-                }
+                    Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show()
+                } else {
+                    lifecycleScope.launch {
+                        val user = userViewModel.getUserByLoginAndPassword(login, password)
+                        if (user != null) {
+                            // usuário encontrado
+                            Toast.makeText(this@LoginActivity, "Bem-vindo, ${user.name}", Toast.LENGTH_SHORT).show()
+                        } else {
+                            // usuário não encontrado
+                            Toast.makeText(this@LoginActivity, "Usuário ou senha incorretos", Toast.LENGTH_SHORT).show()
+                        }
+                    }
 
-              /*  userViewModel.getUserByLoginAndPassword(login, password)?.let { user ->
-                    // usuário encontrado
-                    Toast.makeText(this, "Bem-vindo, ${user.name}", Toast.LENGTH_SHORT).show()
-                } ?: run {
-                    // usuário não encontrado
-                    Toast.makeText(this, "Usuário ou senha incorretos", Toast.LENGTH_SHORT).show()
-                }*/
+                }
             }
         }
-
-        /*binding.loginButton.setOnClickListener {
-            startActivity(Intent(this, ListaMedicamentoActivity::class.java))
-        }*/
-    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {

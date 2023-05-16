@@ -5,8 +5,6 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import br.com.oceantech.monitora_saude_60.databinding.ActivityMainBinding
-import com.google.android.material.appbar.MaterialToolbar
-
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -25,7 +23,8 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.action_home -> {
                     // Ação ao selecionar o menu Home
-
+                    val intent = Intent(this, VisitanteActivity::class.java)
+                    startActivity(intent)
                     true
                 }
                 R.id.action_medicamentos -> {

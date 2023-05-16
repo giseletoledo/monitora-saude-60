@@ -13,6 +13,7 @@ import br.com.oceantech.monitora_saude_60.databinding.ActivityCadastroMedicament
 import br.com.oceantech.monitora_saude_60.model.Medicamento
 import br.com.oceantech.monitora_saude_60.utils.formatDate
 import br.com.oceantech.monitora_saude_60.utils.toLocalDateOrNull
+import br.com.oceantech.monitora_saude_60.viewModel.MedicamentoListAdapter
 import br.com.oceantech.monitora_saude_60.viewModel.MedicamentoViewModel
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -33,6 +34,9 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCadastroMedicamentoBinding
     private lateinit var viewModel: MedicamentoViewModel
+
+    private lateinit var medicamentoListAdapter: MedicamentoListAdapter
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,6 +98,8 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
                 val medicamentos = viewModel.getMedicamentos()
                 val medicamentosString = medicamentos.joinToString(separator = "\n")
                 Log.d("Ver medicamentos cadastrados", medicamentosString)
+
+                medicamentoListAdapter.updateList(medicamentos)
             }
             viewModel.insert(medicamento)
             setResult(Activity.RESULT_OK)
@@ -203,13 +209,16 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
             // Se a próxima data/hora do medicamento for antes da data de início, adicionar o intervalo
             nextDateTime = nextDateTime.plusHours(intervaloDoses.toLong())
         }
-        while (Duration.between(startDateTime, nextDateTime).toDays() < duracaoDias) {
-            val nextTimeFormatted = DateTimeFormatter.ISO_LOCAL_TIME.format(nextDateTime.toLocalTime())
+        val durationBetweenStartAndEnd = Duration.ofDays(duracaoDias.toLong())
+        var currentDateTime = nextDateTime
+        while (currentDateTime.isBefore(startDateTime.plus(durationBetweenStartAndEnd))) {
+            val nextTimeFormatted = DateTimeFormatter.ISO_LOCAL_TIME.format(currentDateTime.toLocalTime())
             horarios.add(nextTimeFormatted)
-            nextDateTime = nextDateTime.plusHours(intervaloDoses.toLong())
+            currentDateTime = currentDateTime.plusHours(intervaloDoses.toLong())
         }
         return horarios
     }
+
     private fun validarDataInicial(): LocalDate? {
         // Obtém a string contendo a data do campo de data inicial
         val dataInicialStr = binding.txtDatainicial.editText?.text?.toString()

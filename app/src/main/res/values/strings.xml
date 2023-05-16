@@ -21,4 +21,8 @@
     <string name="label_entrar">Entrar</string>
     <string name="entrar">Entrar</string>
     <string name="btn_adicionar_medicamento">Adicionar Medicamento</string>
+    <string name="label_listamedicamentos">Medicamentos</string>
+    <string name="adicionar_medicamento_descricao">Adicionar Medicamento</string>
+    <string name="btn_txt_cadastrar">Cadastrar</string>
+    <string name="btn_txt_entrar">Entrar</string>
 </resources>

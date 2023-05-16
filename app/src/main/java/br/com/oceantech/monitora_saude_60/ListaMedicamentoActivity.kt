@@ -34,7 +34,7 @@ class ListaMedicamentoActivity : AppCompatActivity() {
             }
 
             // Inicialize a RecyclerView e o Adapter
-            adapter = MedicamentoListAdapter(this, onDelete = { medicamento -> deleteMedicamento(medicamento) }, onEdit = { medicamento ->
+            adapter = MedicamentoListAdapter(onDelete = { medicamento -> deleteMedicamento(medicamento) }, onEdit = { medicamento ->
                 editMedicamento(
                     medicamento
                 )
@@ -106,6 +106,6 @@ class ListaMedicamentoActivity : AppCompatActivity() {
         }
 
         private fun editMedicamento(medicamento: Medicamento) {
-            // Implemente a lógica de edição de medicamento aqui
+            viewModel.edit(medicamento)
         }
 }
