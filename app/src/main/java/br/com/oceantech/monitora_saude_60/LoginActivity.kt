@@ -1,8 +1,11 @@
 package br.com.oceantech.monitora_saude_60
 
+import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
+import android.widget.TextView
 
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
@@ -10,6 +13,8 @@ import androidx.lifecycle.lifecycleScope
 import br.com.oceantech.monitora_saude_60.databinding.ActivityLoginBinding
 import br.com.oceantech.monitora_saude_60.viewModel.UserViewModel
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
@@ -41,16 +46,30 @@ class LoginActivity : AppCompatActivity() {
                         val user = userViewModel.getUserByLoginAndPassword(login, password)
                         if (user != null) {
                             // usuário encontrado
-                            Toast.makeText(this@LoginActivity, "Bem-vindo, ${user.name}", Toast.LENGTH_SHORT).show()
+                            showBottomSheetMessage("Bem-vindo, ${user.name}")
                         } else {
                             // usuário não encontrado
-                            Toast.makeText(this@LoginActivity, "Usuário ou senha incorretos", Toast.LENGTH_SHORT).show()
+                            showBottomSheetMessage("Usuário ou senha incorretos")
                         }
                     }
 
                 }
             }
         }
+
+    private fun showBottomSheetMessage(message: String) {
+        val bottomSheetDialog = BottomSheetDialog(this)
+        val bottomSheetView = layoutInflater.inflate(R.layout.bottom_sheet_login_message, null)
+        val messageTextView = bottomSheetView.findViewById<TextView>(R.id.messageTextView)
+        messageTextView.text = message
+        bottomSheetDialog.setContentView(bottomSheetView)
+
+        // Ajuste o deslocamento vertical do Bottom Sheet
+        val behavior = BottomSheetBehavior.from(bottomSheetView.parent as View)
+        behavior.peekHeight = Resources.getSystem().displayMetrics.heightPixels / 2
+
+        bottomSheetDialog.show()
+    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
