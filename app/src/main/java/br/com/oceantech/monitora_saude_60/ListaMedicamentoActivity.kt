@@ -104,8 +104,10 @@ class ListaMedicamentoActivity : AppCompatActivity() {
     private fun deleteMedicamento(medicamento: Medicamento) {
             viewModel.delete(medicamento)
         }
+    private fun editMedicamento(medicamento: Medicamento) {
+        val intent = Intent(this, EditarMedicamentoActivity::class.java)
+        intent.putExtra(EditarMedicamentoActivity.EXTRA_MEDICAMENTO_ID, medicamento.id)
+        startActivity(intent)
+    }
 
-        private fun editMedicamento(medicamento: Medicamento) {
-            viewModel.edit(medicamento)
-        }
 }

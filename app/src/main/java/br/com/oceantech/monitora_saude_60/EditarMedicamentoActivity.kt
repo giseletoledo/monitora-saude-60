@@ -12,7 +12,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import br.com.oceantech.monitora_saude_60.databinding.ActivityCadastroMedicamentoBinding
+import br.com.oceantech.monitora_saude_60.databinding.ActivityEditarMedicamentoBinding
 import br.com.oceantech.monitora_saude_60.model.Medicamento
 import br.com.oceantech.monitora_saude_60.utils.formatDate
 import br.com.oceantech.monitora_saude_60.utils.toLocalDateOrNull
@@ -34,13 +34,19 @@ import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
-class CadastroMedicamentoActivity : AppCompatActivity() {
+class EditarMedicamentoActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityCadastroMedicamentoBinding
+    private lateinit var binding: ActivityEditarMedicamentoBinding
     private lateinit var viewModel: MedicamentoViewModel
+
+    companion object {
+        const val EXTRA_MEDICAMENTO_ID = "medicamento_id"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityCadastroMedicamentoBinding.inflate(layoutInflater)
+
+        binding = ActivityEditarMedicamentoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         // Configura a Toolbar
@@ -50,35 +56,51 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this).get(MedicamentoViewModel::class.java)
 
+        // Obter o ID do medicamento a ser editado do intent
+        val medicamentoId = intent.getIntExtra(EXTRA_MEDICAMENTO_ID, -1)
 
-        val medicamentoId = intent.getLongExtra(EXTRA_MEDICAMENTO_ID, -1)
+        // Verifique se o ID é válido
+        if (medicamentoId != -1) {
+            // Observe o LiveData do medicamento com base no ID
+            viewModel.getMedicamentoById(medicamentoId).observe(this) { medicamento ->
+                medicamento?.let {
+                    val camposPreenchidos = binding.ednomeMedicamento.text.toString().isNotBlank()
+                    binding.eddosagem.text.toString().isNotBlank() &&
+                            binding.edduracao.text.toString().isNotBlank() &&
+                            binding.edintervaloDoses.text.toString().isNotBlank() &&
+                            binding.edtxtDatainicial.editText?.text.toString().isNotBlank() &&
+                            binding.edtxtHorarios.editText?.text.toString().isNotBlank()
 
-        if (medicamentoId != -1L) {
-            viewModel.getMedicamentoById(medicamentoId.toInt()).observe(this) { medicamento ->
-                if (medicamento != null) {
-                    preencherFormulario(medicamento)
+
+                    if (!camposPreenchidos) {
+                        // Os campos ainda não estão preenchidos, então preencha-os com as informações do medicamento
+                        preencherCamposEdicao(medicamento)
+                    }
                 }
             }
+        } else {
+            // ID inválido, trate o erro ou tome uma ação apropriada
+            Toast.makeText(this, "Medicação inexistente ou removida", Toast.LENGTH_LONG).show()
         }
 
         viewModel.dataInicial.observe(this) { dataInicial ->
-            binding.txtDatainicial.editText?.setText(dataInicial?.formatDate())
+            binding.edtxtDatainicial.editText?.setText(dataInicial?.formatDate())
         }
 
         viewModel.horarios.observe(this) { horarios ->
             val firstHorario = horarios.firstOrNull()
             if (firstHorario != null) {
-                binding.txtHorarios.editText?.setText(firstHorario.toString())
+                binding.edtxtHorarios.editText?.setText(firstHorario.toString())
             }
         }
 
         insertListeners()
 
-        binding.btnSalvarMedicamento.setOnClickListener {
-            val nome = binding.nomeMedicamento.text.toString()
-            val dosagem = binding.dosagem.text.toString().toDoubleOrNull() ?: 0.0
-            val duracao = binding.duracao.text.toString().toIntOrNull()
-            val intervaloDoses = binding.intervaloDoses.text.toString().toIntOrNull()
+        binding.btnEditarMedicamento.setOnClickListener {
+            val nome = binding.ednomeMedicamento.text.toString()
+            val dosagem = binding.eddosagem.text.toString().toDoubleOrNull() ?: 0.0
+            val duracao = binding.edduracao.text.toString().toIntOrNull()
+            val intervaloDoses = binding.edintervaloDoses.text.toString().toIntOrNull()
             val dataInicial = viewModel.dataInicial.value
             val horarios = viewModel.horarios.value ?: emptyList()
 
@@ -100,8 +122,7 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
                 val medicamentosString = medicamentos.joinToString(separator = "\n")
                 Log.d("Ver medicamentos cadastrados", medicamentosString)
                 viewModel.insert(medicamento)
-                showBottomSheetMessage("Medicamento, ${medicamento.nome} cadastrado")
-
+                showBottomSheetMessage("Medicamento, ${medicamento.nome} editado com sucesso!")
             }
 
             setResult(Activity.RESULT_OK)
@@ -154,7 +175,7 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
     }
     private fun insertListeners() {
 
-        binding.txtDatainicial.editText?.setOnClickListener {
+        binding.edtxtDatainicial.editText?.setOnClickListener {
             val datePicker = MaterialDatePicker.Builder.datePicker().build()
 
             datePicker.addOnPositiveButtonClickListener { timestamp ->
@@ -163,7 +184,7 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
                     viewModel.onDataInicialSelecionada(dataInicial)
 
                     validarDataInicial()
-                    binding.txtDatainicial.editText?.setText(dataInicial.formatDate())
+                    binding.edtxtDatainicial.editText?.setText(dataInicial.formatDate())
                 } catch (e: DateTimeException) {
                     Toast.makeText(this, "Data inválida", Toast.LENGTH_LONG).show()
                 }
@@ -172,28 +193,29 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
             datePicker.show(supportFragmentManager, "DATE_PICKER_TAG")
         }
 
-        binding.txtHorarios.editText?.setOnClickListener {
+        binding.edtxtHorarios.editText?.setOnClickListener {
             val timePicker = MaterialTimePicker.Builder()
                 .setTimeFormat(TimeFormat.CLOCK_24H)
                 .build()
 
             timePicker.addOnPositiveButtonClickListener {
                 //val selectedTimeInMillis = timePicker.hour * 60L * 60L * 1000L + timePicker.minute * 60L * 1000L
-                val intervaloDosesText = binding.intervaloDoses.text.toString()
+                val intervaloDosesText = binding.edintervaloDoses.text.toString()
                 if (intervaloDosesText.isBlank() || intervaloDosesText.toInt() <= 0) {
                     Toast.makeText(this, "Intervalo de doses inválido", Toast.LENGTH_LONG).show()
                 } else {
                     val intervaloDoses = intervaloDosesText.toInt()
 
                     val selectedTimeFormatted = "${timePicker.hour.toString().padStart(2, '0')}:${timePicker.minute.toString().padStart(2, '0')}"
-                    binding.txtHorarios.editText?.setText(selectedTimeFormatted) ?: run {
+                    binding.edtxtHorarios.editText?.setText(selectedTimeFormatted) ?: run {
                         Toast.makeText(this, "Preencha um horário", Toast.LENGTH_LONG).show()
                     }
 
                     val selectedTime = LocalTime.of(timePicker.hour, timePicker.minute)
 
-                    val startDate = binding.txtDatainicial.editText?.text?.toString()?.toLocalDateOrNull()?.atTime(selectedTime.getHour(), selectedTime.getMinute())?.toInstant(ZoneOffset.UTC)
-                    val duracaoDias = binding.duracao.text.toString().toIntOrNull() ?: 0
+                    val startDate = binding.edtxtDatainicial.editText?.text?.toString()?.toLocalDateOrNull()?.atTime(selectedTime.getHour(), selectedTime.getMinute())?.toInstant(
+                        ZoneOffset.UTC)
+                    val duracaoDias = binding.edduracao.text.toString().toIntOrNull() ?: 0
 
                     if (startDate == null || duracaoDias == null) {
                         Toast.makeText(this, "Preenchimento da Data inicial e Duração são obrigatórios ", Toast.LENGTH_LONG).show()
@@ -237,7 +259,7 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
 
     private fun validarDataInicial(): LocalDate? {
         // Obtém a string contendo a data do campo de data inicial
-        val dataInicialStr = binding.txtDatainicial.editText?.text?.toString()
+        val dataInicialStr = binding.edtxtDatainicial.editText?.text?.toString()
 
         // Converte a string em um objeto LocalDate usando a função de extensão
         val dataInicial = dataInicialStr?.toLocalDateOrNull()
@@ -251,10 +273,24 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
         return dataInicial
     }
 
+
+    private fun preencherCamposEdicao(medicamento: Medicamento) {
+
+        val primeiroHorario = medicamento.horarios.firstOrNull()
+
+        binding.ednomeMedicamento.setText(medicamento.nome)
+        binding.eddosagem.setText(medicamento.dosagem.toString())
+        binding.edduracao.setText(medicamento.duracao.toString())
+        binding.edintervaloDoses.setText(medicamento.intervaloDoses.toString())
+        binding.edtxtDatainicial.editText?.setText(medicamento.dataInicio.format(DateTimeFormatter.ISO_LOCAL_DATE))
+
+        // Exibir apenas o primeiro horário no campo de hora
+        binding.edtxtHorarios.editText?.setText(primeiroHorario.toString())
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                // Tratar evento de clique no botão de voltar
                 onBackPressedDispatcher.onBackPressed()
                 return true
             }
@@ -262,18 +298,4 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
         }
     }
 
-    private fun preencherFormulario(medicamento: Medicamento) {
-        binding.nomeMedicamento.setText(medicamento.nome)
-        binding.dosagem.setText(medicamento.dosagem.toString())
-        binding.duracao.setText(medicamento.duracao.toString())
-        binding.intervaloDoses.setText(medicamento.intervaloDoses.toString())
-        binding.txtDatainicial.editText?.setText(medicamento.dataInicio.format(DateTimeFormatter.ISO_LOCAL_DATE))
-        binding.txtHorarios.editText?.setText(medicamento.horarios.joinToString(", "))
-    }
-
-    companion object {
-        const val EXTRA_MEDICAMENTO_ID = "medicamento_id"
-    }
-
 }
-

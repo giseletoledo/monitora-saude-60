@@ -3,7 +3,7 @@
     <string name="btn_txt_medicamentos">Medicamentos</string>
     <string name="btn_txt_atividades">Atividades</string>
     <string name="label_medicamentos">Cadastro de Medicamentos</string>
-    <string name="label_horarios">Hora</string>
+    <string name="label_horarios">Horário inicial</string>
     <string name="msg_campos_invalidos">Valores inválidos</string>
     <string name="label_datainicial">Data inicial</string>
     <string name="intervalo_entre_as_doses_em_horas">Intervalo entre as doses (em horas)</string>
@@ -12,10 +12,10 @@
     <string name="btn_text_adicionar_medicamento">Adicionar Medicamento</string>
     <string name="menu_home">Inicio</string>
     <string name="menu_medicamentos">Medicamentos</string>
-    <string name="menu_relatorio">Relatorio</string>
+    <string name="menu_relatorio">Relatório</string>
     <string name="menu_dieta">Dieta</string>
     <string name="menu_config">Configurações</string>
-    <string name="duracao">Duração</string>
+    <string name="duracao">Duração (em dias)</string>
     <string name="btn_txt_dieta">Dieta</string>
     <string name="label_cadastrar">Cadastro</string>
     <string name="label_entrar">Entrar</string>
@@ -25,4 +25,7 @@
     <string name="adicionar_medicamento_descricao">Adicionar Medicamento</string>
     <string name="btn_txt_cadastrar">Cadastrar</string>
     <string name="btn_txt_entrar">Entrar</string>
+    <string name="label_editarmedicamentos">Editar Medicamento</string>
+    <string name="btn_editar_medicamento">Editar Medicamento</string>
+    <string name="btn_finalizar_edt">Finalizar</string>
 </resources>
