@@ -52,11 +52,8 @@ class MedicamentoViewModel(application: Application) : AndroidViewModel(applicat
     fun insert(medicamento: Medicamento) {
         Log.d("Medicamento", "Inserindo no banco de dados: $medicamento") // adiciona um log com os valores do medicamento
 
-     viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                repository.insertOrUpdate(medicamento)
-            }
-         loadMedicamentos()
+        viewModelScope.launch {
+         repository.insert(medicamento)
         }
     }
     fun delete(medicamento: Medicamento) {

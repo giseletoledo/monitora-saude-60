@@ -159,7 +159,8 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
 
             datePicker.addOnPositiveButtonClickListener { timestamp ->
                 try {
-                    val dataInicial = Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDate()
+                    val dataInicial = Instant.ofEpochMilli(timestamp)
+                        .atZone(ZoneId.of("UTC")).toLocalDate()
                     viewModel.onDataInicialSelecionada(dataInicial)
 
                     validarDataInicial()

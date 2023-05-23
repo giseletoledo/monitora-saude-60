@@ -9,17 +9,10 @@ class MedicamentoRepository(private val dataSource: MedicamentoDataSource) {
 
     suspend fun getById(id: Int): Medicamento? = dataSource.getById(id)
 
-    suspend fun insert(medicamento: Medicamento) = dataSource.insert(medicamento)
-
-    suspend fun delete(medicamento: Medicamento) = dataSource.delete(medicamento)
-
-    suspend fun insertOrUpdate(medicamento: Medicamento) {
-        val existingMedicamento = getById(medicamento.id)
-        if (existingMedicamento != null) {
-            dataSource.delete(existingMedicamento)
-        }
+    suspend fun insert(medicamento: Medicamento) {
         dataSource.insert(medicamento)
     }
+    suspend fun delete(medicamento: Medicamento) = dataSource.delete(medicamento)
 
     suspend fun getAllMed(): List<Medicamento> {
         return dataSource.getAllMed()

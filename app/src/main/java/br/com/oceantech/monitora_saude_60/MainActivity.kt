@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.action_configuracoes -> {
                     // Ação ao selecionar o menu Configurações
-                    val intent = Intent(this, RegisterActivity::class.java)
+                    val intent = Intent(this, ConfiguracaoActivity::class.java)
                     startActivity(intent)
                     true
                 }

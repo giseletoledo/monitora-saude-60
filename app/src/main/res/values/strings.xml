@@ -28,4 +28,6 @@
     <string name="label_editarmedicamentos">Editar Medicamento</string>
     <string name="btn_editar_medicamento">Editar Medicamento</string>
     <string name="btn_finalizar_edt">Finalizar</string>
+    <string name="label_configuracoes">Configurações</string>
+    <string name="btn_txt_responsavel">Responsável</string>
 </resources>

@@ -117,10 +117,10 @@ class EditarMedicamentoActivity : AppCompatActivity() {
                 horarios = horarios,
                 duracao = duracao,
             )
+
+            Log.d("Ver medicamentos cadastrados", medicamento.toString())
+
             lifecycleScope.launch {
-                val medicamentos = viewModel.getMedicamentos()
-                val medicamentosString = medicamentos.joinToString(separator = "\n")
-                Log.d("Ver medicamentos cadastrados", medicamentosString)
                 viewModel.insert(medicamento)
                 showBottomSheetMessage("Medicamento, ${medicamento.nome} editado com sucesso!")
             }
@@ -180,7 +180,8 @@ class EditarMedicamentoActivity : AppCompatActivity() {
 
             datePicker.addOnPositiveButtonClickListener { timestamp ->
                 try {
-                    val dataInicial = Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDate()
+                    val dataInicial = Instant.ofEpochMilli(timestamp)
+                        .atZone(ZoneId.of("UTC")).toLocalDate()
                     viewModel.onDataInicialSelecionada(dataInicial)
 
                     validarDataInicial()

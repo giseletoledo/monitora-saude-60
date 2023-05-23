@@ -16,7 +16,7 @@ class MedicamentoDataSource(medicamentoDao: MedicamentoDao) {
     suspend fun getById(id: Int): Medicamento? = withContext(Dispatchers.IO) {
         dao.getById(id)
     }
-    suspend fun insert(medicamento: Medicamento) = withContext(Dispatchers.IO) {
+    suspend fun insert(medicamento: Medicamento) {
         dao.insert(medicamento)
     }
 
