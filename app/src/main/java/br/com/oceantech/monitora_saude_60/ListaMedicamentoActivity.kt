@@ -5,12 +5,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.oceantech.monitora_saude_60.databinding.ActivityListaMedicamentoBinding
 import br.com.oceantech.monitora_saude_60.model.Medicamento
 import br.com.oceantech.monitora_saude_60.viewModel.MedicamentoListAdapter
 import br.com.oceantech.monitora_saude_60.viewModel.MedicamentoViewModel
 import com.google.android.material.appbar.MaterialToolbar
+import kotlinx.coroutines.launch
 
 class ListaMedicamentoActivity : AppCompatActivity() {
 
@@ -89,6 +91,14 @@ class ListaMedicamentoActivity : AppCompatActivity() {
                 }
             }
         }
+
+    override fun onResume() {
+        super.onResume()
+
+        lifecycleScope.launch {
+            adapter.updateList(viewModel.getMedicamentos())
+        }
+    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
