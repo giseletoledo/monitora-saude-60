@@ -1,13 +1,11 @@
 package br.com.oceantech.monitora_saude_60
 
-import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
-import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
-import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
@@ -18,8 +16,8 @@ import br.com.oceantech.monitora_saude_60.utils.formatDate
 import br.com.oceantech.monitora_saude_60.utils.toLocalDateOrNull
 import br.com.oceantech.monitora_saude_60.viewModel.MedicamentoViewModel
 import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
@@ -38,6 +36,8 @@ class EditarMedicamentoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEditarMedicamentoBinding
     private lateinit var viewModel: MedicamentoViewModel
+    private var medicamento: Medicamento? = null
+    private var dialog: Dialog? = null
 
     companion object {
         const val EXTRA_MEDICAMENTO_ID = "medicamento_id"
@@ -64,6 +64,7 @@ class EditarMedicamentoActivity : AppCompatActivity() {
             // Observe o LiveData do medicamento com base no ID
             viewModel.getMedicamentoById(medicamentoId).observe(this) { medicamento ->
                 medicamento?.let {
+                    this.medicamento = medicamento
                     val camposPreenchidos = binding.ednomeMedicamento.text.toString().isNotBlank()
                     binding.eddosagem.text.toString().isNotBlank() &&
                             binding.edduracao.text.toString().isNotBlank() &&
@@ -97,12 +98,21 @@ class EditarMedicamentoActivity : AppCompatActivity() {
         insertListeners()
 
         binding.btnEditarMedicamento.setOnClickListener {
+
             val nome = binding.ednomeMedicamento.text.toString()
             val dosagem = binding.eddosagem.text.toString().toDoubleOrNull() ?: 0.0
             val duracao = binding.edduracao.text.toString().toIntOrNull()
             val intervaloDoses = binding.edintervaloDoses.text.toString().toIntOrNull()
-            val dataInicial = viewModel.dataInicial.value
-            val horarios = viewModel.horarios.value ?: emptyList()
+
+
+            // Obtendo a data inicial em formato de String
+            val dataInicialString = binding.edtxtDatainicial.editText?.text.toString()
+
+            // Convertendo a String da data inicial em um objeto LocalDate
+            val dataInicial = LocalDate.parse(dataInicialString)
+
+            //val dataInicial = binding.edtxtDatainicial.editText?.text.toString()
+            val horarios =  viewModel.horarios.value ?: medicamento?.horarios ?: emptyList()
 
             if (nome.isBlank()  || intervaloDoses == null || dataInicial == null || duracao == null || horarios.isEmpty()) {
                 Toast.makeText(this, "Preencha todos os campos obrigatórios", Toast.LENGTH_SHORT).show()
@@ -110,6 +120,7 @@ class EditarMedicamentoActivity : AppCompatActivity() {
             }
 
             val medicamento = Medicamento(
+                id = this.medicamento?.id ?: 0,
                 nome = nome,
                 dosagem = dosagem,
                 intervaloDoses = intervaloDoses,
@@ -124,9 +135,6 @@ class EditarMedicamentoActivity : AppCompatActivity() {
                 viewModel.insert(medicamento)
                 showBottomSheetMessage("Medicamento, ${medicamento.nome} editado com sucesso!")
             }
-
-            setResult(Activity.RESULT_OK)
-            //finish()
         }
 
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
@@ -165,11 +173,24 @@ class EditarMedicamentoActivity : AppCompatActivity() {
         val bottomSheetView = layoutInflater.inflate(R.layout.bottom_sheet_cadmed_message, null)
         val messageTextView = bottomSheetView.findViewById<TextView>(R.id.editarBottomTextView)
         messageTextView.text = message
-        bottomSheetDialog.setContentView(bottomSheetView)
 
-        // Ajuste o deslocamento vertical do Bottom Sheet
-        val behavior = BottomSheetBehavior.from(bottomSheetView.parent as View)
-        behavior.peekHeight = Resources.getSystem().displayMetrics.heightPixels / 2
+        val btnEditarMedBottom = bottomSheetView.findViewById<MaterialButton>(R.id.btnEditarMedBottom)
+        btnEditarMedBottom.text = getString(R.string.btn_finalizar_edt)
+
+        btnEditarMedBottom.setOnClickListener {
+            // Código para iniciar a nova Activity aqui
+            //val intent = Intent(this, ListaMedicamentoActivity::class.java)
+            //startActivity(intent)
+            finish()
+        }
+
+        bottomSheetDialog.setOnDismissListener {
+            if (bottomSheetDialog.isShowing) {
+                finish()
+            }
+        }
+
+        bottomSheetDialog.setContentView(bottomSheetView)
 
         bottomSheetDialog.show()
     }
@@ -298,5 +319,11 @@ class EditarMedicamentoActivity : AppCompatActivity() {
             else -> return super.onOptionsItemSelected(item)
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        dialog?.dismiss()
+    }
+
 
 }

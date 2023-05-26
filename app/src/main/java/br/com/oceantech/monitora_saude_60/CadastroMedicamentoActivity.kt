@@ -20,6 +20,7 @@ import br.com.oceantech.monitora_saude_60.viewModel.MedicamentoViewModel
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
@@ -88,6 +89,7 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
             }
 
             val medicamento = Medicamento(
+                id = 0,
                 nome = nome,
                 dosagem = dosagem,
                 intervaloDoses = intervaloDoses,
@@ -144,6 +146,18 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
         val bottomSheetView = layoutInflater.inflate(R.layout.bottom_sheet_cadmed_message, null)
         val messageTextView = bottomSheetView.findViewById<TextView>(R.id.editarBottomTextView)
         messageTextView.text = message
+
+        val btnEditarMedBottom = bottomSheetView.findViewById<MaterialButton>(R.id.btnEditarMedBottom)
+        btnEditarMedBottom.text = getString(R.string.btn_finalizar_edt)
+
+        btnEditarMedBottom.setOnClickListener {
+            // Código para iniciar a nova Activity aqui
+            val intent = Intent(this, ListaMedicamentoActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+
         bottomSheetDialog.setContentView(bottomSheetView)
 
         // Ajuste o deslocamento vertical do Bottom Sheet

@@ -7,11 +7,13 @@
     <TextView
         android:id="@+id/editarBottomTextView"
         android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="100dp"
-        android:layout_height="300dp"
-        android:textSize="20sp"
+        android:layout_marginRight="16dp"
         android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/btnEditarMedBottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -20,13 +22,19 @@
         android:id="@+id/btnEditarMedBottom"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
-        android:background="@drawable/rounded_button"
-        android:gravity="center"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="20dp"
         android:text="@string/btn_finalizar_edt"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@color/md_theme_dark_onPrimary"
+        android:textSize="16sp"
+        app:backgroundTint="#00FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editarBottomTextView"
-        />
+        app:strokeColor="#072E2A"
+        app:strokeWidth="2dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
