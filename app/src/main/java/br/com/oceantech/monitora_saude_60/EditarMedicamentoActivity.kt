@@ -181,6 +181,7 @@ class EditarMedicamentoActivity : AppCompatActivity() {
             // Código para iniciar a nova Activity aqui
             //val intent = Intent(this, ListaMedicamentoActivity::class.java)
             //startActivity(intent)
+            bottomSheetDialog.dismiss()
             finish()
         }
 
