@@ -1,13 +1,10 @@
 package br.com.oceantech.monitora_saude_60
 
-import android.app.Activity
 import android.content.Intent
-import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
-import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
@@ -18,7 +15,6 @@ import br.com.oceantech.monitora_saude_60.utils.formatDate
 import br.com.oceantech.monitora_saude_60.utils.toLocalDateOrNull
 import br.com.oceantech.monitora_saude_60.viewModel.MedicamentoViewModel
 import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -105,9 +101,6 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
                 showBottomSheetMessage("Medicamento, ${medicamento.nome} cadastrado")
 
             }
-
-            setResult(Activity.RESULT_OK)
-            //finish()
         }
 
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
@@ -151,18 +144,11 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
         btnEditarMedBottom.text = getString(R.string.btn_finalizar_edt)
 
         btnEditarMedBottom.setOnClickListener {
-            // Código para iniciar a nova Activity aqui
-            val intent = Intent(this, ListaMedicamentoActivity::class.java)
-            startActivity(intent)
+            bottomSheetDialog.dismiss()
             finish()
         }
 
-
         bottomSheetDialog.setContentView(bottomSheetView)
-
-        // Ajuste o deslocamento vertical do Bottom Sheet
-        val behavior = BottomSheetBehavior.from(bottomSheetView.parent as View)
-        behavior.peekHeight = Resources.getSystem().displayMetrics.heightPixels / 2
 
         bottomSheetDialog.show()
     }

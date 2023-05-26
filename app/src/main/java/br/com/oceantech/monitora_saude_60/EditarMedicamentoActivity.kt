@@ -72,7 +72,6 @@ class EditarMedicamentoActivity : AppCompatActivity() {
                             binding.edtxtDatainicial.editText?.text.toString().isNotBlank() &&
                             binding.edtxtHorarios.editText?.text.toString().isNotBlank()
 
-
                     if (!camposPreenchidos) {
                         // Os campos ainda não estão preenchidos, então preencha-os com as informações do medicamento
                         preencherCamposEdicao(medicamento)
@@ -178,9 +177,6 @@ class EditarMedicamentoActivity : AppCompatActivity() {
         btnEditarMedBottom.text = getString(R.string.btn_finalizar_edt)
 
         btnEditarMedBottom.setOnClickListener {
-            // Código para iniciar a nova Activity aqui
-            //val intent = Intent(this, ListaMedicamentoActivity::class.java)
-            //startActivity(intent)
             bottomSheetDialog.dismiss()
             finish()
         }
@@ -296,7 +292,6 @@ class EditarMedicamentoActivity : AppCompatActivity() {
         return dataInicial
     }
 
-
     private fun preencherCamposEdicao(medicamento: Medicamento) {
 
         val primeiroHorario = medicamento.horarios.firstOrNull()
@@ -310,7 +305,6 @@ class EditarMedicamentoActivity : AppCompatActivity() {
         // Exibir apenas o primeiro horário no campo de hora
         binding.edtxtHorarios.editText?.setText(primeiroHorario.toString())
     }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
@@ -320,11 +314,8 @@ class EditarMedicamentoActivity : AppCompatActivity() {
             else -> return super.onOptionsItemSelected(item)
         }
     }
-
     override fun onDestroy() {
         super.onDestroy()
         dialog?.dismiss()
     }
-
-
 }
