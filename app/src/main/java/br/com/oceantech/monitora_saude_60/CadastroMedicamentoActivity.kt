@@ -35,6 +35,7 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCadastroMedicamentoBinding
     private lateinit var viewModel: MedicamentoViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCadastroMedicamentoBinding.inflate(layoutInflater)
@@ -85,7 +86,6 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
             }
 
             val medicamento = Medicamento(
-                id = 0,
                 nome = nome,
                 dosagem = dosagem,
                 intervaloDoses = intervaloDoses,
@@ -146,6 +146,12 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
         btnEditarMedBottom.setOnClickListener {
             bottomSheetDialog.dismiss()
             finish()
+        }
+
+        bottomSheetDialog.setOnDismissListener {
+            if (bottomSheetDialog.isShowing) {
+                finish()
+            }
         }
 
         bottomSheetDialog.setContentView(bottomSheetView)
