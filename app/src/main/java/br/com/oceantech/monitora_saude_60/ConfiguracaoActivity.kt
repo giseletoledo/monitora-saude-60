@@ -1,5 +1,6 @@
 package br.com.oceantech.monitora_saude_60
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import br.com.oceantech.monitora_saude_60.databinding.ActivityConfiguracaoBinding
@@ -19,5 +20,10 @@ class ConfiguracaoActivity : AppCompatActivity() {
         val toolbar: MaterialToolbar = binding.toolbar
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        binding.btnResponsavel.setOnClickListener {
+            val intent = Intent(this, ResponsavelActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
