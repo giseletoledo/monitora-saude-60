@@ -50,7 +50,7 @@ class ResponsavelActivity : AppCompatActivity() {
                 if (nome.isNotEmpty() && celular.isNotEmpty()) {
                     val responsavel = Responsavel(celular, nome)
 
-                    if (responsavelId != null) {
+                    if (responsavelId != -1L) {
                         // Edit Mode
                         viewModel.updateResponsavel(responsavel)
                     } else {

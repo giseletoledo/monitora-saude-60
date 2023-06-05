@@ -32,4 +32,6 @@
     <string name="btn_txt_responsavel">Responsável</string>
     <string name="label_responsavel">Responsável</string>
     <string name="editar_resp">Editar</string>
+    <string name="descricao_responsavel_nome">Nome da pessoa responsável</string>
+    <string name="descricao_responsavel_telefone">Telefone do responsável</string>
 </resources>

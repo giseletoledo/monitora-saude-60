@@ -14,7 +14,7 @@ import br.com.oceantech.monitora_saude_60.model.Medicamento
 import br.com.oceantech.monitora_saude_60.model.Responsavel
 import br.com.oceantech.monitora_saude_60.model.User
 
-@Database(entities = [Medicamento::class, User::class, Responsavel::class], version = 4, exportSchema = false)
+@Database(entities = [Medicamento::class, User::class, Responsavel::class], version = 5, exportSchema = false)
     @TypeConverters(DateConverter::class, TimeListConverter::class)
     abstract class AppDatabase : RoomDatabase() {
         abstract fun medicamentoDao(): MedicamentoDao
