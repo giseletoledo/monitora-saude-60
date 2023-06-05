@@ -52,6 +52,9 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
-
+    }
+    override fun onResume() {
+        super.onResume()
+        binding.bottomNavigationView.menu.findItem(R.id.action_home).isChecked = true
     }
 }

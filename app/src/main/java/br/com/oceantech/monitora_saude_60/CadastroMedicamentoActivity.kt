@@ -134,6 +134,11 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        binding.bottomNavigationView.menu.findItem(R.id.action_medicamentos).isChecked = true
+    }
+
     private fun showBottomSheetMessage(message: String) {
         val bottomSheetDialog = BottomSheetDialog(this)
         val bottomSheetView = layoutInflater.inflate(R.layout.bottom_sheet_cadmed_message, null)

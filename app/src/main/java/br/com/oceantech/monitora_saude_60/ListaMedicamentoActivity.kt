@@ -98,6 +98,8 @@ class ListaMedicamentoActivity : AppCompatActivity() {
         lifecycleScope.launch {
             adapter.updateList(viewModel.getMedicamentos())
         }
+
+            binding.bottomNavigationView.menu.findItem(R.id.action_medicamentos).isChecked = true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

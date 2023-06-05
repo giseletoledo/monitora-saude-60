@@ -3,6 +3,7 @@ package br.com.oceantech.monitora_saude_60
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.lifecycle.ViewModelProvider
 import br.com.oceantech.monitora_saude_60.databinding.ActivityConfiguracaoBinding
 import br.com.oceantech.monitora_saude_60.viewModel.ResponsavelViewModel
@@ -41,7 +42,7 @@ class ConfiguracaoActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.action_home -> {
                     // Ação ao selecionar o menu Home
-                    val intent = Intent(this, VisitanteActivity::class.java)
+                    val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                     true
                 }
@@ -69,6 +70,20 @@ class ConfiguracaoActivity : AppCompatActivity() {
                 }
                 else -> false
             }
+        }
+    }
+    override fun onResume() {
+        super.onResume()
+        binding.bottomNavigationView.menu.findItem(R.id.action_configuracoes).isChecked = true
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                // Tratar evento de clique no botão de voltar
+                onBackPressedDispatcher.onBackPressed()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
         }
     }
 }
