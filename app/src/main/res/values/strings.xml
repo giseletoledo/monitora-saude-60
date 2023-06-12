@@ -34,4 +34,5 @@
     <string name="editar_resp">Editar</string>
     <string name="descricao_responsavel_nome">Nome da pessoa responsável</string>
     <string name="descricao_responsavel_telefone">Telefone do responsável</string>
+    <string name="descricao_mosi">Mosi - monitoramento de idosos</string>
 </resources>

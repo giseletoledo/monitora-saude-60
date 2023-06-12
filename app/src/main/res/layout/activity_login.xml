@@ -36,18 +36,19 @@
             />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/nomeLoginEditText"
+            android:id="@+id/phoneLoginEditText"
             android:layout_marginTop="16dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Nome"
+            android:hint="Telefone"
             app:layout_constraintStart_toStartOf="@+id/guide_start"
             app:layout_constraintEnd_toEndOf="@+id/guide_end"
             app:layout_constraintTop_toBottomOf="@id/toolbar">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/nomeLoginInputEditText"
+                android:id="@+id/phoneLoginInputEditText"
                 android:layout_marginBottom="16dp"
+                android:inputType="phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
@@ -61,11 +62,12 @@
             android:hint="Senha"
             app:layout_constraintStart_toStartOf="@+id/guide_start"
             app:layout_constraintEnd_toEndOf="@+id/guide_end"
-            app:layout_constraintTop_toBottomOf="@id/nomeLoginEditText">
+            app:layout_constraintTop_toBottomOf="@id/phoneLoginEditText">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/senhaInputEditText"
                 android:layout_marginBottom="16dp"
+                android:inputType="textPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 

@@ -44,7 +44,6 @@ class RegisterActivity : AppCompatActivity() {
      binding.cadastrarButton.setOnClickListener {
             val name = binding.nomeInputEditText.text.toString().trim()
             val birthday = userViewModel.dataNascimento.value
-            val login = binding.loginInputEditText.text.toString().trim()
             val password = binding.senhaInputEditText.text.toString().trim()
             val phone = binding.telInputEditText.text.toString().trim()
 
@@ -64,18 +63,19 @@ class RegisterActivity : AppCompatActivity() {
             val user = User(
                 name = name,
                 birthday = birthday,
-                login = login,
                 password = password,
                 phone = phone
             )
 
-            // Insere o novo usuário no banco de dados
+         // Insere o novo usuário no banco de dados
          lifecycleScope.launch {
              userViewModel.insert(user)
-             val usuarios = userViewModel.getAllUsers()
-             val usuariosString = usuarios.joinToString(separator = "\n")
-             Log.d("Ver usuários cadastrados", usuariosString)
+             userViewModel.getAllUsers()
+             val usuariosString = userViewModel.users.value?.joinToString(separator = "\n") { it.name }
+             Log.d("Ver usuários cadastrados", usuariosString ?: "")
          }
+
+
 
          // Exibe o objeto User no Toast
          Toast.makeText(this, user.toString(), Toast.LENGTH_SHORT).show()

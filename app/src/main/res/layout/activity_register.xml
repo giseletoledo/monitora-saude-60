@@ -47,24 +47,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/nomeInputEditText"
             android:layout_marginBottom="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/loginCadastroEditText"
-        android:layout_marginTop="16dp"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Login"
-        app:layout_constraintStart_toStartOf="@+id/guide_start"
-        app:layout_constraintEnd_toEndOf="@+id/guide_end"
-        app:layout_constraintTop_toBottomOf="@id/nomeCadastrarEditText">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/loginInputEditText"
-            android:layout_marginBottom="16dp"
+            android:inputType="textPersonName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
@@ -79,11 +62,12 @@
         android:hint="Senha"
         app:layout_constraintStart_toStartOf="@+id/guide_start"
         app:layout_constraintEnd_toEndOf="@+id/guide_end"
-        app:layout_constraintTop_toBottomOf="@id/loginCadastroEditText">
+        app:layout_constraintTop_toBottomOf="@id/nomeCadastrarEditText">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/senhaInputEditText"
             android:layout_marginBottom="16dp"
+            android:inputType="textPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
@@ -102,6 +86,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/daNascInputEditText"
             android:layout_marginBottom="16dp"
+            android:inputType="date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
@@ -120,6 +105,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/telInputEditText"
             android:layout_marginBottom="16dp"
+            android:inputType="phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

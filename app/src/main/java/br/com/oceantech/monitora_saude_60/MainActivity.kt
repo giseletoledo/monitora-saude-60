@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.action_relatorio -> {
                     // Ação ao selecionar o menu Relatório
-                    val intent = Intent(this, LoginActivity::class.java)
+                    val intent = Intent(this, RegisterActivity::class.java)
                     startActivity(intent)
                     true
                 }

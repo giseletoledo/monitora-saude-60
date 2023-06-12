@@ -1,5 +1,6 @@
 package br.com.oceantech.monitora_saude_60
 
+import android.content.Intent
 import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -36,14 +37,14 @@ class LoginActivity : AppCompatActivity() {
         userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
 
         binding.loginButton.setOnClickListener {
-            val login = binding.nomeLoginInputEditText.text.toString().trim()
+            val phone = binding.phoneLoginInputEditText.text.toString().trim()
             val password = binding.senhaInputEditText.text.toString().trim()
 
-            if (login.isEmpty() || password.isEmpty()) {
+            if (phone.isEmpty() || password.isEmpty()) {
                     Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show()
                 } else {
                     lifecycleScope.launch {
-                        val user = userViewModel.getUserByLoginAndPassword(login, password)
+                        val user = userViewModel.getUserByPhoneAndPassword(phone, password)
                         if (user != null) {
                             // usuário encontrado
                             showBottomSheetMessage("Bem-vindo, ${user.name}")
@@ -67,6 +68,12 @@ class LoginActivity : AppCompatActivity() {
         // Ajuste o deslocamento vertical do Bottom Sheet
         val behavior = BottomSheetBehavior.from(bottomSheetView.parent as View)
         behavior.peekHeight = Resources.getSystem().displayMetrics.heightPixels / 2
+
+        bottomSheetDialog.setOnDismissListener {
+            // Bottom Sheet foi fechado, iniciar a MainActivity aqui
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
 
         bottomSheetDialog.show()
     }

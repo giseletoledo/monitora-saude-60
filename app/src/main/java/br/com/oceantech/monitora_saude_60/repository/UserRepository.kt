@@ -8,9 +8,9 @@ import kotlinx.coroutines.withContext
 class UserRepository(private val userDao: UserDao) {
     suspend fun insert(user: User) = userDao.insert(user)
 
-    suspend fun getUserByLoginAndPassword(login: String, password: String): User? {
+    suspend fun getUserByPhoneAndPassword(phone: String, password: String): User? {
         return withContext(Dispatchers.IO) {
-            userDao.getUserByLoginAndPassword(login, password)
+            userDao.getUserByPhoneAndPassword(phone, password)
         }
     }
     suspend fun update(user: User) = userDao.update(user)

@@ -12,8 +12,8 @@ interface UserDao {
     @Insert
     suspend fun insert(user: User)
 
-    @Query("SELECT * FROM users WHERE login = :login AND password = :password")
-    fun getUserByLoginAndPassword(login: String, password: String): User?
+    @Query("SELECT * FROM users WHERE phone = :phone AND password = :password")
+    fun getUserByPhoneAndPassword(phone: String, password: String): User?
 
     @Update
     suspend fun update(user: User)

@@ -8,8 +8,8 @@ class UserDataSource(private val userDao: UserDao) : UserDao {
         userDao.insert(user)
     }
 
-    override fun getUserByLoginAndPassword(login: String, password: String): User? {
-        return userDao.getUserByLoginAndPassword(login, password)
+    override fun getUserByPhoneAndPassword(phone: String, password: String): User? {
+        return userDao.getUserByPhoneAndPassword(phone, password)
     }
 
     override suspend fun update(user: User) {
