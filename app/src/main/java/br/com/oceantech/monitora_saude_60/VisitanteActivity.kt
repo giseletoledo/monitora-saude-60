@@ -8,12 +8,12 @@ import br.com.oceantech.monitora_saude_60.databinding.ActivityVisitanteBinding
 class VisitanteActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityVisitanteBinding
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityVisitanteBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.logoApp.setImageResource(R.drawable.logomosi)
 
         binding.btnCadastrar.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
