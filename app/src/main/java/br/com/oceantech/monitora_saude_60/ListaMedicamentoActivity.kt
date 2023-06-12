@@ -1,5 +1,8 @@
 package br.com.oceantech.monitora_saude_60
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -115,6 +118,12 @@ class ListaMedicamentoActivity : AppCompatActivity() {
 
     private fun deleteMedicamento(medicamento: Medicamento) {
             viewModel.delete(medicamento)
+
+        // Cancel the reminder associated with the deleted medication
+        val alarmManager = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(applicationContext, LembreteReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(applicationContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        alarmManager?.cancel(pendingIntent)
         }
     private fun editMedicamento(medicamento: Medicamento) {
         val intent = Intent(this, EditarMedicamentoActivity::class.java)

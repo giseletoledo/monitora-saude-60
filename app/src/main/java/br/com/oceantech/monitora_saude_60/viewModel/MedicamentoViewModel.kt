@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import br.com.oceantech.monitora_saude_60.database.AppDatabase
 import br.com.oceantech.monitora_saude_60.database.MedicamentoDataSource
+import br.com.oceantech.monitora_saude_60.model.HorarioMedicamento
 import br.com.oceantech.monitora_saude_60.model.Medicamento
 import br.com.oceantech.monitora_saude_60.repository.MedicamentoRepository
 import kotlinx.coroutines.Dispatchers
@@ -28,6 +29,9 @@ class MedicamentoViewModel(application: Application) : AndroidViewModel(applicat
 
     private var _dataInicial = MutableLiveData<LocalDate>()
     val dataInicial: LiveData<LocalDate> = _dataInicial
+
+    private val _recentHorarios = MutableLiveData<List<HorarioMedicamento>>()
+    val recentHorarios: MutableLiveData<List<HorarioMedicamento>> = _recentHorarios
 
     init {
         val dao = AppDatabase.getInstance(application).medicamentoDao()
@@ -62,7 +66,6 @@ class MedicamentoViewModel(application: Application) : AndroidViewModel(applicat
             loadMedicamentos()
         }
     }
-
     fun getMedicamentoById(id: Int): LiveData<Medicamento> {
         val liveData = MutableLiveData<Medicamento>()
         viewModelScope.launch {
@@ -76,6 +79,34 @@ class MedicamentoViewModel(application: Application) : AndroidViewModel(applicat
     }
     fun onHorariosSelecionados(horarios: List<LocalTime>) {
         _horarios.value = horarios
+    }
+    suspend fun getRecentHorarios() {
+        val horariosNomes = withContext(Dispatchers.IO) {
+            val medicamentos = repository.getAllMed()
+
+            val horariosMedicamento = mutableListOf<HorarioMedicamento>()
+
+            // Itera sobre os medicamentos e extrai os horários, nome e dia
+            for (medicamento in medicamentos) {
+                for (horario in medicamento.horarios) {
+                    Log.d("horarios", horario.toString())
+                    val horarioMedicamento = HorarioMedicamento(medicamento.nome, horario)
+                    horariosMedicamento.add(horarioMedicamento)
+                }
+            }
+
+            // Ordena os horários em ordem crescente
+            horariosMedicamento.sortBy { it.hora }
+
+            // Retorna os 5 horários mais recentes, se houver
+            if (horariosMedicamento.size > 5) {
+                horariosMedicamento.takeLast(5)
+            } else {
+                horariosMedicamento
+            }
+        }
+
+        _recentHorarios.value = horariosNomes
     }
 }
 

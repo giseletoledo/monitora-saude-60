@@ -1,6 +1,11 @@
 package br.com.oceantech.monitora_saude_60
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -21,6 +26,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.time.DateTimeException
 import java.time.Duration
 import java.time.Instant
@@ -30,16 +36,31 @@ import java.time.LocalTime
 import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
+
 
 class CadastroMedicamentoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCadastroMedicamentoBinding
     private lateinit var viewModel: MedicamentoViewModel
-
+    private lateinit var alarmManager: AlarmManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCadastroMedicamentoBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+
+        val lembreteReceiver = LembreteReceiver()
+        val intentFilter = IntentFilter().apply {
+            addAction("LEMBRETE_ACTION") // Ação personalizada para a transmissão (broadcast)
+        }
+        registerReceiver(lembreteReceiver, intentFilter)
+
+       // Para remover o registro do receptor de transmissão (broadcast receiver)
+        unregisterReceiver(lembreteReceiver)
+
 
         // Configura a Toolbar
         val toolbar: MaterialToolbar = binding.toolbar
@@ -47,7 +68,6 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         viewModel = ViewModelProvider(this).get(MedicamentoViewModel::class.java)
-
 
         val medicamentoId = intent.getLongExtra(EXTRA_MEDICAMENTO_ID, -1)
 
@@ -93,11 +113,16 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
                 horarios = horarios,
                 duracao = duracao,
             )
+
+            criarLembretes(horarios, intervaloDoses,"Lembrete: ${medicamento.nome}")
+
             lifecycleScope.launch {
                 val medicamentos = viewModel.getMedicamentos()
                 val medicamentosString = medicamentos.joinToString(separator = "\n")
+
                 Log.d("Ver medicamentos cadastrados", medicamentosString)
                 viewModel.insert(medicamento)
+
                 showBottomSheetMessage("Medicamento, ${medicamento.nome} cadastrado")
 
             }
@@ -133,12 +158,10 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
             }
         }
     }
-
     override fun onResume() {
         super.onResume()
         binding.bottomNavigationView.menu.findItem(R.id.action_medicamentos).isChecked = true
     }
-
     private fun showBottomSheetMessage(message: String) {
         val bottomSheetDialog = BottomSheetDialog(this)
         val bottomSheetView = layoutInflater.inflate(R.layout.bottom_sheet_cadmed_message, null)
@@ -222,6 +245,63 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
         }
     }
 
+    private fun criarLembretes(horarios: List<LocalTime>, intervalos: Int?, mensagem: String) {
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val currentTimeMillis = System.currentTimeMillis()
+
+        val intent = Intent(applicationContext, LembreteReceiver::class.java)
+        intent.action = "LEMBRETE_ACTION" // Define a ação personalizada para o broadcast
+        intent.putExtra("mensagem", mensagem)
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            applicationContext,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        // Cancelar os alarmes anteriores
+        alarmManager.cancel(pendingIntent)
+
+        for ((index, horario) in horarios.withIndex()) {
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = currentTimeMillis
+
+            // Definir a hora e o minuto do horário especificado
+            val hora = horario.hour
+            val minuto = horario.minute
+
+            // Definir a data e hora do próximo horário calculado
+            calendar.set(Calendar.HOUR_OF_DAY, hora)
+            calendar.set(Calendar.MINUTE, minuto)
+            calendar.set(Calendar.SECOND, 0)
+
+            val notificationId = index + 1 // Ajustar o ID de notificação para começar em 1
+            intent.putExtra("notificationId", notificationId) // Define o ID de notificação exclusivo
+
+            val updatedPendingIntent = PendingIntent.getBroadcast(
+                applicationContext,
+                notificationId,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, updatedPendingIntent)
+            } else {
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, updatedPendingIntent)
+            }
+
+            // Log para exibir o horário criado
+            Log.d("MeuApp", "Horário do lembrete criado: ${SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(calendar.time)}")
+
+            // Verificar se existe um intervalo definido para o horário
+            if (intervalos != null) {
+                calendar.add(Calendar.MILLISECOND, intervalos)
+            }
+        }
+    }
+
     private fun calcularHorarios(intervaloDoses: Int, startDate: Instant?, selectedTimeFormatted: String, duracaoDias: Int): List<String> {
         val horarios = mutableListOf<String>()
 
@@ -244,6 +324,7 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
             horarios.add(nextTimeFormatted)
             currentDateTime = currentDateTime.plusHours(intervaloDoses.toLong())
         }
+
         return horarios
     }
 

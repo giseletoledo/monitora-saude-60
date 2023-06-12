@@ -1,0 +1,5 @@
+<!-- rounded_blue_background.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#155A96" />
+    <corners android:radius="8dp" /> <!-- Raio do canto arredondado. Substitua pelo valor desejado -->
+</shape>
