@@ -50,7 +50,7 @@ class LoginActivity : AppCompatActivity() {
                             showBottomSheetMessage("Bem-vindo, ${user.name}")
                         } else {
                             // usuário não encontrado
-                            showBottomSheetMessage("Usuário ou senha incorretos")
+                            Toast.makeText(this@LoginActivity, "Usuário ou senha incorretos", Toast.LENGTH_SHORT).show()
                         }
                     }
 
