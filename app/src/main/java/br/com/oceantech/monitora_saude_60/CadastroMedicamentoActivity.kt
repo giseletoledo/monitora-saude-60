@@ -37,8 +37,6 @@ import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
-
-
 class CadastroMedicamentoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCadastroMedicamentoBinding
@@ -114,7 +112,8 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
                 duracao = duracao,
             )
 
-            criarLembretes(horarios, intervaloDoses,"Lembrete: ${medicamento.nome}")
+            criarLembretes(horarios, intervaloDoses, medicamento)
+
 
             lifecycleScope.launch {
                 val medicamentos = viewModel.getMedicamentos()
@@ -245,25 +244,12 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
         }
     }
 
-    private fun criarLembretes(horarios: List<LocalTime>, intervalos: Int?, mensagem: String) {
+    private fun criarLembretes(horarios: List<LocalTime>, intervalos: Int?, medicamento: Medicamento) {
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val currentTimeMillis = System.currentTimeMillis()
 
-        val intent = Intent(applicationContext, LembreteReceiver::class.java)
-        intent.action = "LEMBRETE_ACTION" // Define a ação personalizada para o broadcast
-        intent.putExtra("mensagem", mensagem)
-
-        val pendingIntent = PendingIntent.getBroadcast(
-            applicationContext,
-            0,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-
         // Cancelar os alarmes anteriores
-        alarmManager.cancel(pendingIntent)
-
-        for ((index, horario) in horarios.withIndex()) {
+        for (horario in horarios) {
             val calendar = Calendar.getInstance()
             calendar.timeInMillis = currentTimeMillis
 
@@ -276,28 +262,35 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
             calendar.set(Calendar.MINUTE, minuto)
             calendar.set(Calendar.SECOND, 0)
 
-            val notificationId = index + 1 // Ajustar o ID de notificação para começar em 1
-            intent.putExtra("notificationId", notificationId) // Define o ID de notificação exclusivo
+            val notificationId = horarios.indexOf(horario) + 1 // Ajustar o ID de notificação para começar em 1
 
-            val updatedPendingIntent = PendingIntent.getBroadcast(
+            val intent = Intent(applicationContext, LembreteReceiver::class.java)
+            intent.action = "LEMBRETE_ACTION" // Define a ação personalizada para o broadcast
+            intent.putExtra("medicamentoNome", medicamento.nome) // Define o nome do medicamento
+
+            val pendingIntent = PendingIntent.getBroadcast(
                 applicationContext,
                 notificationId,
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, updatedPendingIntent)
-            } else {
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, updatedPendingIntent)
-            }
+            // Cancelar o alarme anterior
+            alarmManager.cancel(pendingIntent)
 
             // Log para exibir o horário criado
-            Log.d("MeuApp", "Horário do lembrete criado: ${SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(calendar.time)}")
+            val formattedTime = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(calendar.time)
+            Log.d("MeuApp", "Horário do lembrete criado: $formattedTime")
 
             // Verificar se existe um intervalo definido para o horário
             if (intervalos != null) {
                 calendar.add(Calendar.MILLISECOND, intervalos)
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+            } else {
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
             }
         }
     }
@@ -363,7 +356,6 @@ class CadastroMedicamentoActivity : AppCompatActivity() {
         binding.txtDatainicial.editText?.setText(medicamento.dataInicio.format(DateTimeFormatter.ISO_LOCAL_DATE))
         binding.txtHorarios.editText?.setText(medicamento.horarios.joinToString(", "))
     }
-
     companion object {
         const val EXTRA_MEDICAMENTO_ID = "medicamento_id"
     }

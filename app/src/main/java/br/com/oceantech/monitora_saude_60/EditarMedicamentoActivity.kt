@@ -1,7 +1,11 @@
 package br.com.oceantech.monitora_saude_60
 
+import android.app.AlarmManager
 import android.app.Dialog
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -22,6 +26,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.time.DateTimeException
 import java.time.Duration
 import java.time.Instant
@@ -31,6 +36,7 @@ import java.time.LocalTime
 import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
 
 class EditarMedicamentoActivity : AppCompatActivity() {
 
@@ -38,6 +44,7 @@ class EditarMedicamentoActivity : AppCompatActivity() {
     private lateinit var viewModel: MedicamentoViewModel
     private var medicamento: Medicamento? = null
     private var dialog: Dialog? = null
+    private var alarmIdsAnteriores: List<Int>? = null
 
     companion object {
         const val EXTRA_MEDICAMENTO_ID = "medicamento_id"
@@ -103,15 +110,15 @@ class EditarMedicamentoActivity : AppCompatActivity() {
             val duracao = binding.edduracao.text.toString().toIntOrNull()
             val intervaloDoses = binding.edintervaloDoses.text.toString().toIntOrNull()
 
-
             // Obtendo a data inicial em formato de String
             val dataInicialString = binding.edtxtDatainicial.editText?.text.toString()
 
             // Convertendo a String da data inicial em um objeto LocalDate
-            val dataInicial = LocalDate.parse(dataInicialString)
+            val formatoData = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+            val dataInicial = LocalDate.parse(dataInicialString, formatoData)
 
-            //val dataInicial = binding.edtxtDatainicial.editText?.text.toString()
             val horarios =  viewModel.horarios.value ?: medicamento?.horarios ?: emptyList()
+
 
             if (nome.isBlank()  || intervaloDoses == null || dataInicial == null || duracao == null || horarios.isEmpty()) {
                 Toast.makeText(this, "Preencha todos os campos obrigatórios", Toast.LENGTH_SHORT).show()
@@ -130,8 +137,14 @@ class EditarMedicamentoActivity : AppCompatActivity() {
 
             Log.d("Ver medicamentos cadastrados", medicamento.toString())
 
+            val idMedicamento = this.medicamento?.id ?: 0
+
+
             lifecycleScope.launch {
                 viewModel.insert(medicamento)
+                val horariosAntigos = viewModel.horarios.value ?: medicamento?.horarios ?: emptyList()
+                cancelarAlarmesAnteriores(idMedicamento, horariosAntigos)
+                criarLembretes(horarios, intervaloDoses, medicamento)
                 showBottomSheetMessage("Medicamento, ${medicamento.nome} editado com sucesso!")
             }
         }
@@ -164,6 +177,80 @@ class EditarMedicamentoActivity : AppCompatActivity() {
                 }
                 else -> false
             }
+        }
+    }
+
+    private fun criarLembretes(horarios: List<LocalTime>, intervalos: Int?, medicamento: Medicamento) {
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val currentTimeMillis = System.currentTimeMillis()
+
+        // Cancelar os alarmes anteriores
+        for (horario in horarios) {
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = currentTimeMillis
+
+            // Definir a hora e o minuto do horário especificado
+            val hora = horario.hour
+            val minuto = horario.minute
+
+            // Definir a data e hora do próximo horário calculado
+            calendar.set(Calendar.HOUR_OF_DAY, hora)
+            calendar.set(Calendar.MINUTE, minuto)
+            calendar.set(Calendar.SECOND, 0)
+
+            val notificationId = horarios.indexOf(horario) + 1 // Ajustar o ID de notificação para começar em 1
+
+            val intent = Intent(applicationContext, LembreteReceiver::class.java)
+            intent.action = "LEMBRETE_ACTION" // Define a ação personalizada para o broadcast
+            intent.putExtra("medicamentoNome", medicamento.nome) // Define o nome do medicamento
+
+            val pendingIntent = PendingIntent.getBroadcast(
+                applicationContext,
+                notificationId,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+
+            // Cancelar o alarme anterior
+            alarmManager.cancel(pendingIntent)
+
+            // Log para exibir o horário criado
+            val formattedTime = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(calendar.time)
+            Log.d("MeuApp", "Horário do lembrete criado: $formattedTime")
+
+            // Verificar se existe um intervalo definido para o horário
+            if (intervalos != null) {
+                calendar.add(Calendar.MILLISECOND, intervalos)
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+            } else {
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+            }
+        }
+    }
+
+    private fun cancelarAlarmesAnteriores(idMedicamento: Int, horarios: List<LocalTime>) {
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        for (horario in horarios) {
+            val notificationId = horarios.indexOf(horario) + 1 // Ajustar o ID de notificação para começar em 1
+
+            val intent = Intent(applicationContext, LembreteReceiver::class.java)
+            intent.action = "LEMBRETE_ACTION" // Define a ação personalizada para o broadcast
+            intent.putExtra("medicamentoId", idMedicamento) // Passa o ID do medicamento como extra
+            intent.putExtra("notificationId", notificationId) // Define o ID de notificação exclusivo
+
+            val pendingIntent = PendingIntent.getBroadcast(
+                applicationContext,
+                notificationId,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+
+            // Cancelar o alarme anterior
+            alarmManager.cancel(pendingIntent)
         }
     }
 
@@ -301,6 +388,13 @@ class EditarMedicamentoActivity : AppCompatActivity() {
         binding.edduracao.setText(medicamento.duracao.toString())
         binding.edintervaloDoses.setText(medicamento.intervaloDoses.toString())
         binding.edtxtDatainicial.editText?.setText(medicamento.dataInicio.format(DateTimeFormatter.ISO_LOCAL_DATE))
+
+        // Atualizar a data inicial
+        binding.edtxtDatainicial.editText?.setText(medicamento.dataInicio.formatDate())
+
+        // Atualizar os horários no campo de horários
+        val horariosString = medicamento.horarios.joinToString(", ")
+        binding.edtxtHorarios.editText?.setText(horariosString)
 
         // Exibir apenas o primeiro horário no campo de hora
         binding.edtxtHorarios.editText?.setText(primeiroHorario.toString())

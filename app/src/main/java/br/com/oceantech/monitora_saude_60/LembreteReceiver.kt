@@ -8,24 +8,24 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 
-class LembreteReceiver: BroadcastReceiver() {
+class LembreteReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         // Verificar se a ação recebida é a ação personalizada "LEMBRETE_ACTION"
         if (intent?.action == "LEMBRETE_ACTION") {
-            // Obter a mensagem do intent
-            val mensagem = intent.getStringExtra("mensagem")
+            // Obter o nome do medicamento do intent
+            val medicamentoNome = intent.getStringExtra("medicamentoNome")
 
             // Obter o ID de notificação do intent
-            val notificationId = intent.getIntExtra("notificationId", 0) ?: 0
+            val notificationId = intent.getIntExtra("notificationId", 0)
 
             // Exibir a notificação
-            if (mensagem != null) {
-                exibirNotificacao(context, mensagem, notificationId)
+            if (medicamentoNome != null) {
+                exibirNotificacao(context, medicamentoNome, notificationId)
             }
         }
     }
 
-    private fun exibirNotificacao(context: Context?, mensagem: String, notificationId: Int) {
+    private fun exibirNotificacao(context: Context?, medicamentoNome: String, notificationId: Int) {
         // Configurar o canal de notificação (necessário para o Android 8.0 e superior)
         val channelId = "lembrete_channel_id"
         val channelName = "Lembrete Channel"
@@ -42,7 +42,7 @@ class LembreteReceiver: BroadcastReceiver() {
         val notification = NotificationCompat.Builder(context!!, channelId)
             .setSmallIcon(smallIcon)
             .setContentTitle("Lembrete")
-            .setContentText(mensagem)
+            .setContentText("Lembrete: $medicamentoNome")
             .setAutoCancel(true)
             .build()
 

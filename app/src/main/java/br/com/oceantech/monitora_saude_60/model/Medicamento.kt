@@ -12,7 +12,7 @@ import java.time.LocalTime
 @TypeConverters(LocalTimeConverter::class, DateConverter::class)
 data class Medicamento(
     @PrimaryKey(autoGenerate = true)
-    val id: Int? = null,
+    val id: Int = 0,
     val nome: String,
     val dosagem: Double,
     val intervaloDoses: Int,
