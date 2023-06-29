@@ -20,9 +20,9 @@ Projeto desenvolvido no período de 2 meses, desde a ideia até o protótipo And
 
 ### Documentação
 
-[Apresentação] (https://github.com/giseletoledo/Monitora_Saude_60/blob/master/Mosi_apresentacao_mvp.pdf)
+[Apresentação](https://github.com/giseletoledo/Monitora_Saude_60/blob/master/Mosi_apresentacao_mvp.pdf)
 
-[Protótipo no figma] (https://www.figma.com/file/uoPG62mez19eGvxAtbUnXH/Monitoramento-de-sa%C3%BAde?type=design&node-id=0%3A1&mode=design&t=bi72W9Z1UcB9hJQn-1)
+[Protótipo no figma](https://www.figma.com/file/uoPG62mez19eGvxAtbUnXH/Monitoramento-de-sa%C3%BAde?type=design&node-id=0%3A1&mode=design&t=bi72W9Z1UcB9hJQn-1)
 
-[Teste de cadastro em telas] (https://github.com/giseletoledo/Monitora_Saude_60/blob/master/app_teste_telas.mp4)
+[Teste de cadastro em telas](https://github.com/giseletoledo/Monitora_Saude_60/blob/master/app_teste_telas.mp4)
 
