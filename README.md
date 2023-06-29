@@ -1,4 +1,4 @@
-# Monitora de saúde de idosos
+# Monitoramento de saúde de idosos
 
 MVP(Minimum Viable Project)
 
