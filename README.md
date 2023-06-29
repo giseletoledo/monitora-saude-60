@@ -19,6 +19,7 @@ Projeto desenvolvido no período de 2 meses, desde a ideia até o protótipo And
 - Desenvolvimento com código
 
 ### Documentação
+[Cronograma](https://github.com/giseletoledo/Monitora_Saude_60/blob/master/Cronograma%20Proposto%20pelo%20orientador.pdf)
 
 [Apresentação](https://github.com/giseletoledo/Monitora_Saude_60/blob/master/Mosi_apresentacao_mvp.pdf)
 
